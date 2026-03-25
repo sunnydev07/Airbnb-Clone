@@ -1,0 +1,27 @@
+<%= success %>
+<div class="listings-header">
+    <h3>Welcome to Airbnb</h3>
+    <a href="/listings/createNew" class="btn-add-listing">
+        <i class="fa-solid fa-plus"></i> New Listing
+    </a>
+</div>
+
+<div class="listings-grid">
+    <% for(let listings of allListing){ %>
+    <div class="listing-card">
+        <a href="/listings/<%= listings._id %>" class="listing-card-link">
+            <div class="listing-img-wrapper">
+                <img src="<%= listings.image.url %>" class="listing-img" alt="<%= listings.title %>">
+            </div>
+            <div class="listing-info m-2">
+                <h5 class="listing-title"><%= listings.title %></h5>
+                <p class="listing-location">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <%= listings.location %>, <%= listings.country %>
+                </p>
+                <p class="listing-price"><%= listings.price %> <span>/ night</span></p>
+            </div>
+        </a>
+    </div>
+    <% } %>
+</div>

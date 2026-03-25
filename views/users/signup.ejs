@@ -1,0 +1,131 @@
+<div class="signup-page">
+  <div class="container py-5">
+    <div class="row g-4 align-items-center">
+      <div class="col-lg-6">
+        <p class="text-uppercase fw-bold text-accent mb-2">Welcome</p>
+        <h1 class="fw-bold mb-3 display-5">Join the community of exceptional stays.</h1>
+        <p class="text-secondary mb-4">Create your account to save favorites, message hosts, and book unique homes and experiences worldwide.</p>
+
+        <ul class="list-unstyled d-grid gap-3">
+          <li class="d-flex align-items-start">
+            <span class="badge rounded-pill me-3 badge-glow badge-primary"><i class="fas fa-star"></i></span>
+            <div>
+              <div class="fw-semibold text-light">Trusted stays</div>
+              <small class="text-secondary">Verified hosts with detailed reviews and high-quality photos.</small>
+            </div>
+          </li>
+          <li class="d-flex align-items-start">
+            <span class="badge rounded-pill me-3 badge-glow badge-purple"><i class="fas fa-shield-alt"></i></span>
+            <div>
+              <div class="fw-semibold text-light">Secure payments</div>
+              <small class="text-secondary">Protected checkout with flexible cancellation on select listings.</small>
+            </div>
+          </li>
+          <li class="d-flex align-items-start">
+            <span class="badge rounded-pill me-3 badge-glow badge-success"><i class="fas fa-bolt"></i></span>
+            <div>
+              <div class="fw-semibold text-light">Instant booking</div>
+              <small class="text-secondary">Many homes confirm instantly—no waiting for approvals.</small>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="card shadow-lg border-0 card-dark">
+          <div class="card-body p-4 p-md-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div>
+                <p class="text-uppercase fw-bold text-accent mb-1">Sign up</p>
+                <h4 class="fw-bold mb-0 text-light">Create your account</h4>
+              </div>
+              <div class="text-secondary small">Already a member? <a href="/login" class="fw-semibold text-accent">Log in</a></div>
+            </div>
+
+            <form action="/signup" method="POST" class="needs-validation" novalidate>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold text-light">Full name</label>
+                  <input type="text" name="name" class="form-control form-control-lg input-dark" placeholder="Jane Doe" required>
+                  <div class="invalid-feedback">Please enter your name.</div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold text-light">Username</label>
+                  <input type="text" name="username" class="form-control form-control-lg input-dark" placeholder="jane_doe" required>
+                  <div class="invalid-feedback">Please choose a username.</div>
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-semibold text-light">Email</label>
+                  <input type="email" name="email" class="form-control form-control-lg input-dark" placeholder="you@example.com" required>
+                  <div class="invalid-feedback">Please enter a valid email.</div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold text-light">Password</label>
+                  <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-ink text-secondary"><i class="fas fa-lock"></i></span>
+                    <input type="password" name="password" class="form-control input-dark" placeholder="At least 8 characters" minlength="8" required>
+                    <div class="invalid-feedback">Password must be at least 8 characters.</div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold text-light">Confirm password</label>
+                  <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-ink text-secondary"><i class="fas fa-check"></i></span>
+                    <input type="password" name="confirm" class="form-control input-dark" placeholder="Re-enter password" minlength="8" required>
+                    <div class="invalid-feedback">Please confirm your password.</div>
+                  </div>
+                </div>
+                <div class="col-12 d-flex align-items-center gap-2">
+                  <input class="form-check-input" type="checkbox" value="1" id="agree" required>
+                  <label class="form-check-label text-secondary" for="agree">I agree to the Terms and Privacy Policy.</label>
+                  <div class="invalid-feedback">Please accept to continue.</div>
+                </div>
+              </div>
+
+              <button class="btn btn-accent btn-lg w-100 mt-4" type="submit">Create account</button>
+
+              <div class="text-center text-secondary mt-3 small">Or continue with</div>
+              <div class="d-flex gap-2 mt-2">
+                <button class="btn btn-outline-ink w-100" type="button"><i class="fab fa-google me-2"></i>Google</button>
+                <button class="btn btn-outline-ink w-100" type="button"><i class="fab fa-facebook me-2"></i>Facebook</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .signup-page { background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08), transparent 30%), radial-gradient(circle at 80% 0%, rgba(255,255,255,0.06), transparent 30%), #0b1220; color: #e5e7eb; min-height: 100vh; }
+  .text-accent { color: #ff6b81; }
+  .text-secondary { color: #9ca3af; }
+  .badge-glow { background: #111827; color: #fff; box-shadow: 0 0 16px rgba(255,255,255,0.08); }
+  .badge-purple { background: #7c3aed; }
+  .card-dark { background: #111827; }
+  .input-dark { background: #0f172a; border: 1px solid #1f2937; color: #e5e7eb; }
+  .input-dark:focus { background: #111827; border-color: #ff6b81; color: #fff; box-shadow: 0 0 0 0.2rem rgba(255,107,129,0.15); }
+  .bg-ink { background: #0f172a; border: 1px solid #1f2937; }
+  .btn-accent { background: linear-gradient(135deg, #ff6b81 0%, #ff385c 100%); border: none; color: #fff; box-shadow: 0 12px 30px rgba(255,104,128,0.25); }
+  .btn-accent:hover { filter: brightness(1.05); }
+  .btn-outline-ink { border: 1px solid #1f2937; color: #e5e7eb; background: #0f172a; }
+  .btn-outline-ink:hover { border-color: #ff6b81; color: #fff; }
+  .form-check-input { background-color: #0f172a; border: 1px solid #1f2937; }
+  .form-check-input:checked { background-color: #ff6b81; border-color: #ff6b81; }
+</style>
+
+<script>
+(() => {
+  const forms = document.querySelectorAll('.needs-validation');
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      form.classList.add('was-validated');
+    }, false);
+  });
+})();
+</script>

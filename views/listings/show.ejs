@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airbnb</title>
+</head>
+<body>
+    <h3><%= listing.title %></h3>
+    <div class="card row">
+        <div class="col-6 offset-2 mt-2">
+             <img src="<%= listing.image.url %>" class="card-img-top show-img m-2" style="height: 20rem; border-radius: 20px; width: 50vw;" />
+        </div>
+        <div>
+            Owned by:<strong class="text-primary">
+                 <%= listing.owner && listing.owner.username ? listing.owner.username : "Unknown host" %>
+            </strong>
+            </div>
+    <div class="col-md-8 mx-auto">
+                    <ul class="list-group list-group-flush fs-5">
+                        <li class="list-group-item">
+                            <strong>Description:</strong> <%= listing.description %>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Country:</strong> <%= listing.country %>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Location:</strong> <%= listing.location %>
+                        </li>
+                        <li class="list-group-item text-success">
+                            <strong>Price:</strong> 
+                            ₹ <%= listing.price != null ? listing.price.toLocaleString("en-IN") : "Price not available" %> / night
+                        </li>
+                    </ul>
+                </div>
+  <% if (currUser && listing.owner && currUser._id.equals(listing.owner._id)) { %>
+        <div class="form"  >
+    <form action="/listings/<%= listing._id %>/edit" method="GET" >
+        <button class="btn btn-dark mb-2">Edit</button>
+    </form>
+    <form  method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
+        <button class="btn btn-danger mb-2">Delete</button>
+    </form>
+</div>
+ <% } %>
+</div>
+    
+    <% if(currUser && listing.owner._id.equals(currUser._id)) { %>
+        <hr>
+        <div class="col-8 offest-3">
+            <h4>Leave Review</h4><br>
+            <form method="POST" action="/listings/<%= listing._id %>/reviews" novalidate class="needs-validation">
+                <fieldset class="starability-slot">
+                    <legend>rating:</legend>
+                    <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" checked aria-label="No rating." />
+                    <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                    <label for="first-rate1" title="Terrible">1 star</label>
+                    <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                    <label for="first-rate2" title="Not good">2 stars</label>
+                    <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                    <label for="first-rate3" title="Average">3 stars</label>
+                    <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                    <label for="first-rate4" title="Very good">4 stars</label>
+                    <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                    <label for="first-rate5" title="Amazing">5 stars</label>
+                </fieldset>
+                <div class="mb-3 mt-3">
+                        <label for="comment" class="form-label">Comment</label>
+                        <textarea name="review[comment]" col="30" row="10   " id="comment" required></textarea>
+                </div>
+                <div class="invalid-feedback">Please submit some comment for review</div>
+                <button class="btn btn-outline-dark">Submit</button>
+            </form>
+    </div>
+    <% } %>
+    <hr>
+    <div>
+        <div style="margin-top: 2rem;">
+    <h3 style="margin-bottom: 1rem; font-size: 2rem; font-weight: bold; color: #222;">
+        All Reviews
+    </h3>
+
+   <div class="row g-3">
+      <% if (listing.reviews.length > 0) { %>
+         <% for (review of listing.reviews) { %>
+            <div class="col-md-6">
+                <div style="
+                    background-color: #fff;
+                    border: 1px solid #ddd;
+                    border-radius: 14px;
+                    padding: 1rem 1.2rem;
+                    height: 100%;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                ">  
+                    <p style="margin: 0; font-size: 1.5rem;line-height: 1.5;"><strong>@<%= review.author.username %></strong></p>
+                    <p style="margin: 0; font-size: 1rem; color: #555; line-height: 1.5;">
+                        <strong style="color: #000;">Comment:</strong>
+                        <%= review.comment %>
+                    </p>
+                    <p style="margin: 0 0 0.5rem 0; font-size: 1.1rem; color: #222;">
+                        <strong style="color: #000;">Rating:</strong>
+                        <span class="starability-result" data-rating="<%= review.rating %>">
+                            Rated: <%= review.rating %> stars
+                        </span>
+                    </p>
+                    <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+                        <button class="btn btn-outline-dark">Delete</button>
+                    </form>
+                </div>
+            </div>
+        <% } %>
+    <% } else { %>
+        <p style="color: #777; font-size: 1rem;">No reviews yet.</p>
+    <% } %>
+     
+   </div>
+</div>
+    </div>
+    
+</body>
+</html>

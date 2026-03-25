@@ -1,0 +1,121 @@
+<div class="login-page">
+  <div class="container py-5">
+    <div class="row g-4 align-items-center">
+      <div class="col-lg-6">
+        <p class="text-uppercase fw-bold text-accent mb-2">Welcome back</p>
+        <h1 class="fw-bold mb-3 display-5">Pick up where your journey left off.</h1>
+        <p class="text-secondary mb-4">Log in to manage bookings, save favorites, message hosts, and unlock personalized recommendations.</p>
+
+        <ul class="list-unstyled d-grid gap-3">
+          <li class="d-flex align-items-start">
+            <span class="badge rounded-pill me-3 badge-glow badge-primary"><i class="fas fa-heart"></i></span>
+            <div>
+              <div class="fw-semibold text-light">Your saved places</div>
+              <small class="text-secondary">Revisit wishlisted homes and compare prices faster.</small>
+            </div>
+          </li>
+          <li class="d-flex align-items-start">
+            <span class="badge rounded-pill me-3 badge-glow badge-purple"><i class="fas fa-comments"></i></span>
+            <div>
+              <div class="fw-semibold text-light">Direct host chat</div>
+              <small class="text-secondary">Ask questions before booking and confirm details instantly.</small>
+            </div>
+          </li>
+          <li class="d-flex align-items-start">
+            <span class="badge rounded-pill me-3 badge-glow badge-success"><i class="fas fa-map-marked-alt"></i></span>
+            <div>
+              <div class="fw-semibold text-light">Trip planning tools</div>
+              <small class="text-secondary">Track upcoming stays and explore nearby experiences.</small>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="card shadow-lg border-0 card-dark">
+          <div class="card-body p-4 p-md-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div>
+                <p class="text-uppercase fw-bold text-accent mb-1">Log in</p>
+                <h4 class="fw-bold mb-0 text-light">Access your account</h4>
+              </div>
+              <div class="text-secondary small">New here? <a href="/signup" class="fw-semibold text-accent">Create account</a></div>
+            </div>
+
+            <form action="/login" method="POST" class="needs-validation" novalidate>
+              <div class="row g-3">
+                <div class="col-12">
+                  <label class="form-label fw-semibold text-light">Email or Username</label>
+                  <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-ink text-secondary"><i class="fas fa-user"></i></span>
+                    <input type="text" name="username" class="form-control input-dark" placeholder="you@example.com or username" required>
+                    <div class="invalid-feedback">Please enter your email or username.</div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label fw-semibold text-light">Password</label>
+                  <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-ink text-secondary"><i class="fas fa-lock"></i></span>
+                    <input type="password" name="password" class="form-control input-dark" placeholder="Enter your password" minlength="8" required>
+                    <div class="invalid-feedback">Please enter your password.</div>
+                  </div>
+                </div>
+
+                <div class="col-12 d-flex justify-content-between align-items-center">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="1" id="remember" name="remember">
+                    <label class="form-check-label text-secondary" for="remember">Remember me</label>
+                  </div>
+                  <a href="#" class="small text-accent text-decoration-none">Forgot password?</a>
+                </div>
+              </div>
+
+              <button class="btn btn-accent btn-lg w-100 mt-4" type="submit">Log in</button>
+
+              <div class="text-center text-secondary mt-3 small">Or continue with</div>
+              <div class="d-flex gap-2 mt-2">
+                <button class="btn btn-outline-ink w-100" type="button"><i class="fab fa-google me-2"></i>Google</button>
+                <button class="btn btn-outline-ink w-100" type="button"><i class="fab fa-facebook me-2"></i>Facebook</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .login-page { background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08), transparent 30%), radial-gradient(circle at 80% 0%, rgba(255,255,255,0.06), transparent 30%), #0b1220; color: #e5e7eb; min-height: 100vh; }
+  .text-accent { color: #ff6b81; }
+  .text-secondary { color: #9ca3af !important; }
+  .badge-glow { background: #111827; color: #fff; box-shadow: 0 0 16px rgba(255,255,255,0.08); }
+  .badge-purple { background: #7c3aed; }
+  .card-dark { background: #111827; }
+  .input-dark { background: #0f172a; border: 1px solid #1f2937; color: #e5e7eb; }
+  .input-dark::placeholder { color: #6b7280; }
+  .input-dark:focus { background: #111827; border-color: #ff6b81; color: #fff; box-shadow: 0 0 0 0.2rem rgba(255,107,129,0.15); }
+  .bg-ink { background: #0f172a; border: 1px solid #1f2937; }
+  .btn-accent { background: linear-gradient(135deg, #ff6b81 0%, #ff385c 100%); border: none; color: #fff; box-shadow: 0 12px 30px rgba(255,104,128,0.25); }
+  .btn-accent:hover { filter: brightness(1.05); color: #fff; }
+  .btn-outline-ink { border: 1px solid #1f2937; color: #e5e7eb; background: #0f172a; }
+  .btn-outline-ink:hover { border-color: #ff6b81; color: #fff; }
+  .form-check-input { background-color: #0f172a; border: 1px solid #1f2937; }
+  .form-check-input:checked { background-color: #ff6b81; border-color: #ff6b81; }
+</style>
+
+<script>
+(() => {
+  const forms = document.querySelectorAll('.needs-validation');
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      form.classList.add('was-validated');
+    }, false);
+  });
+})();
+</script>

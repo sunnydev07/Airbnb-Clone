@@ -1,0 +1,51 @@
+ <div class="row">
+       <div class="col-md-8 form-control" style="background-color:beige; font-weight: bold;">
+        <h3>Create a new listing</h3>
+        <form action="/listings/add" method="POST" nonvalidate class="needs-validation">
+            <div class="mb-3">
+                <label class="form-label" for="title">Title</label>
+                <input name="listing[title]" placeholder="add a catchy title" type="text" class="form-control" required>
+                <div class="valid-feedback">
+      Looks good!
+    </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="description">Description</label>
+                <textarea name="listing[description]" placeholder="enter description" type="text" class="form-control" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="title">Image</label>
+                <input name="listing[image]" placeholder="enter image/url" class="form-control" type="text" required>
+            </div>
+            <div class="mb-4">
+                <label class="form-label" for="title">Price</label>
+                <input name="listing[price]" placeholder="enter price" class="form-control" type="text">
+                <div class="invalid-feedback">please enter a valid price</div>
+            </div>
+            <div class="row">
+                <div class="mb-3 col-md-4">
+                <label class="form-label" for="title">Location</label>
+                <input name="listing[location]" placeholder="enter location" class="form-control" type="text">
+                <div class="invalid-feedback">please enter a valid location</div>
+            </div>
+            <div class="mb-3 col-md-8" >
+                <label class="form-label" for="title">Country</label>
+                <input name="listing[country]" placeholder="enter country" class="form-control" type="text">
+                <div class="invalid-feedback">please enter a valid country</div><br>
+            </div>
+            </div>
+           
+                <button class="btn" style="background-color: #ff385c;">Add</button>        
+        
+        
+        
+        
+        
+        
+        
+        
+    </form>
+    </div>
+ </div>
+ 
+    
