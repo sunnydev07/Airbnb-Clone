@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-engine = require('ejs-mate');
+require('dotenv').config();
 const mongoose = require('mongoose');
 const Listing = require('./models/listing');
 const path = require('path');
@@ -10,10 +10,10 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 const expressLayouts = require("express-ejs-layouts");
-app.engine('ejs', engine);
 app.use(expressLayouts);
 app.set("layout", "layouts/boilerplate");
 app.use(express.static(path.join(__dirname, "/public")));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const listingsRouter = require('./routes/listing.js')
 const reviewRouter = require('./routes/review.js');
 const MONGO_URL = "mongodb://127.0.0.1:27017/airbnb";
@@ -108,6 +108,9 @@ app.use((err,req,res,next)=>{
     const statusCode = err.statusCode || 500;
     const message = err.message || 'Something went wrong';
     console.error('Error:', err);
+  if (res.headersSent) {
+    return next(err);
+  }
     res.status(statusCode).render('error', {message, statusCode, layout: false});
 });
 

@@ -75,6 +75,7 @@
     <% } %>
     <hr>
     <div>
+        <% if(listing.reviews.length >0){ %>
         <div style="margin-top: 2rem;">
     <h3 style="margin-bottom: 1rem; font-size: 2rem; font-weight: bold; color: #222;">
         All Reviews
@@ -115,7 +116,23 @@
      
    </div>
 </div>
-    </div>
+<% } %>
+    <div class="offset-3 col-8 mb-3">
+        <h3>where you'll be</h3>
+        <div id="map">
+            <gmp-map
+            center="28.7041,77.1025"
+            zoom="10"
+            map-id="DEMO_MAP_ID"
+            style="height: 400px">
+            </gmp-map>
+        </div>
+</div>
+</div>
+    <script
+    src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.GOOGLE_MAP_API_KEY %>&libraries=maps"
+    defer
+  ></script>
     
 </body>
 </html>
