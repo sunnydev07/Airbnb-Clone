@@ -18,7 +18,7 @@ const validateListing = (req, res, next) => {
     }
     next();
 };
-
+router.get("/", wrapAsync(lisitngController.index));
 // index route
 router.get('/', wrapAsync(lisitngController.index));
 

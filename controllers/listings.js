@@ -1,4 +1,5 @@
 const Listing = require('../models/listing');
+const { geocodeAddress } = require('../utils/geocoding');
 
 const normalizeImageUrl = (listing) => {
     if (!listing || !listing.image || !listing.image.url) return;
@@ -44,6 +45,12 @@ module.exports.addListing = async (req, res, next) => {
     newListing.owner = req.user._id;
     newListing.image = { url, filename };
     
+    // Geocode the address to get coordinates
+    const coordinates = await geocodeAddress(newListing.location, newListing.country);
+    if (coordinates) {
+        newListing.coordinates = coordinates;
+    }
+    
     // // Handle file upload if provided
     // if (req.file) {
     //     newListing.image = {
@@ -58,14 +65,20 @@ module.exports.addListing = async (req, res, next) => {
 };
 module.exports.updateListing = async (req, res) => {
     let { id } = req.params;
-    let lisitng = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    let lisitng = await Listing.findByIdAndUpdate(id, { ...req.body.listing }, { new: true });
+
+    // Geocode the address if location or country changed
+    const coordinates = await geocodeAddress(lisitng.location, lisitng.country);
+    if (coordinates) {
+        lisitng.coordinates = coordinates;
+    }
 
     if(typeof req.file !== "undefined"){
     let url = req.file.path;
     let filename = req.file.filename;
     lisitng.image = {url, filename};
-    await lisitng.save();
     }
+    await lisitng.save();
     req.flash('success', 'listing updated successfully!');
     res.redirect(`/listings/${id}`);
 };

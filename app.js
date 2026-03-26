@@ -87,12 +87,13 @@ app.use((req,res,next)=>{      // middleware to set flash message and currUser i
 
 main().then(()=>{console.log("Connected successfully to DB1!")}).catch(err=>console.log(err.message));
 
-async function main(){
+async function main(){ 
     await mongoose.connect(MONGO_URL);
 }
-app.get('/', (req,res)=>{
-    res.render('home');   
-}); 
+
+app.get('/', (req, res) => {
+  res.redirect('/listings');
+});
 
 app.use('/', userRoutes);
 app.use('/listings', listingsRouter);

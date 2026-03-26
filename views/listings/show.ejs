@@ -119,20 +119,61 @@
 <% } %>
     <div class="offset-3 col-8 mb-3">
         <h3>where you'll be</h3>
-        <div id="map">
-            <gmp-map
-            center="28.7041,77.1025"
-            zoom="10"
-            map-id="DEMO_MAP_ID"
-            style="height: 400px">
-            </gmp-map>
+        <div id="map" style="height: 400px; border-radius: 8px;">
         </div>
+    </div>
 </div>
-</div>
+
     <script
-    src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.GOOGLE_MAP_API_KEY %>&libraries=maps"
+    src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.GOOGLE_MAP_API_KEY %>"
     defer
-  ></script>
+    ></script>
+    
+    <script>
+        function initMap() {
+            // Default coordinates (fallback to Delhi if no coordinates available)
+            const latitude = <%= listing.coordinates && listing.coordinates.latitude ? listing.coordinates.latitude : 28.7041 %>;
+            const longitude = <%= listing.coordinates && listing.coordinates.longitude ? listing.coordinates.longitude : 77.1025 %>;
+            
+            const location = { lat: latitude, lng: longitude };
+            
+            const map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 13,
+                center: location,
+                mapTypeId: 'roadmap'
+            });
+            
+            // Add marker at the listing location
+            const marker = new google.maps.Marker({
+                position: location,
+                map: map,
+                title: '<%= listing.title %>',
+                icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+            });
+            
+            // Add info window to marker
+            const infoWindow = new google.maps.InfoWindow({
+                content: `
+                    <div style="padding: 10px;">
+                        <h4><%= listing.title %></h4>
+                        <p><strong>Location:</strong> <%= listing.location %>, <%= listing.country %></p>
+                        <p><strong>Price:</strong> ₹<%= listing.price %>/night</p>
+                    </div>
+                `,
+                maxWidth: 300
+            });
+            
+            marker.addListener('click', () => {
+                infoWindow.open(map, marker);
+            });
+
+            // Open popup once on load so users can immediately see listing details.
+            infoWindow.open(map, marker);
+        }
+        
+        // Initialize map when page loads
+        window.addEventListener('load', initMap);
+    </script>
     
 </body>
 </html>

@@ -1,30 +1,68 @@
-<nav class="navbar navbar-expand-md bg-body-tertiary border-bottom sticky-top">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="/"><i class="fa-brands fa-airbnb"></i></a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/listings">Listing</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/listings/createNew">New_Listing</a>
-        </li>
-      </ul>
-      <div class="d-flex align-items-center">
-        <% if(!currUser) { %>
-          <a href="/login" class="btn btn-outline-success me-2">Login</a>
-          <a href="/signup" class="btn btn-outline-primary">Signup</a>
-        <% } else { %>
-          <span class="navbar-text me-3">Welcome, <strong><%= currUser.username %></strong></span>
-          <a href="/logout" class="btn btn-outline-danger">Logout</a>
-        <% } %>
+<header class="airbnb-header sticky-top">
+  <div class="airbnb-top-row">
+    <a class="airbnb-brand" href="/listings" aria-label="Airbnb home">
+      <i class="fa-brands fa-airbnb"></i>
+      <span>airbnb</span>
+    </a>
+
+    <nav class="airbnb-center-tabs" aria-label="Primary navigation">
+      <a href="/listings" class="tab-item active" aria-current="page">
+        <i class="fa-solid fa-house-chimney"></i>
+        <span>Homes</span>
+      </a>
+      <a href="/listings" class="tab-item">
+        <span class="tab-badge">NEW</span>
+        <i class="fa-solid fa-earth-americas"></i>
+        <span>Experiences</span>
+      </a>
+      <a href="/listings/createNew" class="tab-item">
+        <span class="tab-badge">NEW</span>
+        <i class="fa-solid fa-bell-concierge"></i>
+        <span>Services</span>
+      </a>
+    </nav>
+
+    <div class="airbnb-right-actions">
+      <a href="/listings/createNew" class="host-link">Become a host</a>
+      <button class="icon-btn" type="button" aria-label="Language">
+        <i class="fa-solid fa-globe"></i>
+      </button>
+
+      <div class="dropdown">
+        <button class="icon-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Open menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <% if(!currUser) { %>
+            <li><a class="dropdown-item" href="/login">Login</a></li>
+            <li><a class="dropdown-item" href="/signup">Signup</a></li>
+          <% } else { %>
+            <li><span class="dropdown-item-text">Hi, <%= currUser.username %></span></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+          <% } %>
+        </ul>
       </div>
     </div>
   </div>
-</nav>
+
+  <div class="airbnb-search-wrap">
+    <div class="airbnb-search-pill">
+      <button type="button" class="search-segment">
+        <strong>Where</strong>
+        <span>Search destinations</span>
+      </button>
+      <button type="button" class="search-segment">
+        <strong>When</strong>
+        <span>Add dates</span>
+      </button>
+      <button type="button" class="search-segment">
+        <strong>Who</strong>
+        <span>Add guests</span>
+      </button>
+      <button type="button" class="search-go" aria-label="Search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </div>
+  </div>
+</header>
