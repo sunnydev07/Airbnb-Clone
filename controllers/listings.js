@@ -11,7 +11,11 @@ const normalizeImageUrl = (listing) => {
 };
 
 module.exports.index = async(req, res)=>{
-    const allListing = await Listing.find({});
+    const query = {};
+    if (req.query.owner === 'me' && req.user) {
+        query.owner = req.user._id;
+    }
+    const allListing = await Listing.find(query);
     allListing.forEach(normalizeImageUrl);
     res.render('listings/index', { allListing });
 };

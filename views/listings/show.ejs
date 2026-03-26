@@ -1,179 +1,184 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Airbnb</title>
-</head>
-<body>
-    <h3><%= listing.title %></h3>
-    <div class="card row">
-        <div class="col-6 offset-2 mt-2">
-             <img src="<%= listing.image.url %>" class="card-img-top show-img m-2" style="height: 20rem; border-radius: 20px; width: 50vw;" />
+<div class="listing-show-container mx-auto my-4">
+    <div class="listing-show-header mb-3">
+        <h1 class="listing-title"><%= listing.title %></h1>
+        <div class="text-muted fs-6 d-flex align-items-center gap-2">
+            <i class="fa-solid fa-location-dot"></i>
+            <span><%= listing.location %>, <%= listing.country %></span>
         </div>
-        <div>
-            Owned by:<strong class="text-primary">
-                 <%= listing.owner && listing.owner.username ? listing.owner.username : "Unknown host" %>
-            </strong>
-            </div>
-    <div class="col-md-8 mx-auto">
-                    <ul class="list-group list-group-flush fs-5">
-                        <li class="list-group-item">
-                            <strong>Description:</strong> <%= listing.description %>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Country:</strong> <%= listing.country %>
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Location:</strong> <%= listing.location %>
-                        </li>
-                        <li class="list-group-item text-success">
-                            <strong>Price:</strong> 
-                            ₹ <%= listing.price != null ? listing.price.toLocaleString("en-IN") : "Price not available" %> / night
-                        </li>
-                    </ul>
-                </div>
-  <% if (currUser && listing.owner && currUser._id.equals(listing.owner._id)) { %>
-        <div class="form"  >
-    <form action="/listings/<%= listing._id %>/edit" method="GET" >
-        <button class="btn btn-dark mb-2">Edit</button>
-    </form>
-    <form  method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
-        <button class="btn btn-danger mb-2">Delete</button>
-    </form>
-</div>
- <% } %>
-</div>
-    
-    <% if(currUser && listing.owner._id.equals(currUser._id)) { %>
-        <hr>
-        <div class="col-8 offest-3">
-            <h4>Leave Review</h4><br>
-            <form method="POST" action="/listings/<%= listing._id %>/reviews" novalidate class="needs-validation">
-                <fieldset class="starability-slot">
-                    <legend>rating:</legend>
-                    <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" checked aria-label="No rating." />
-                    <input type="radio" id="first-rate1" name="review[rating]" value="1" />
-                    <label for="first-rate1" title="Terrible">1 star</label>
-                    <input type="radio" id="first-rate2" name="review[rating]" value="2" />
-                    <label for="first-rate2" title="Not good">2 stars</label>
-                    <input type="radio" id="first-rate3" name="review[rating]" value="3" />
-                    <label for="first-rate3" title="Average">3 stars</label>
-                    <input type="radio" id="first-rate4" name="review[rating]" value="4" />
-                    <label for="first-rate4" title="Very good">4 stars</label>
-                    <input type="radio" id="first-rate5" name="review[rating]" value="5" />
-                    <label for="first-rate5" title="Amazing">5 stars</label>
-                </fieldset>
-                <div class="mb-3 mt-3">
-                        <label for="comment" class="form-label">Comment</label>
-                        <textarea name="review[comment]" col="30" row="10   " id="comment" required></textarea>
-                </div>
-                <div class="invalid-feedback">Please submit some comment for review</div>
-                <button class="btn btn-outline-dark">Submit</button>
-            </form>
     </div>
-    <% } %>
-    <hr>
-    <div>
-        <% if(listing.reviews.length >0){ %>
-        <div style="margin-top: 2rem;">
-    <h3 style="margin-bottom: 1rem; font-size: 2rem; font-weight: bold; color: #222;">
-        All Reviews
-    </h3>
 
-   <div class="row g-3">
-      <% if (listing.reviews.length > 0) { %>
-         <% for (review of listing.reviews) { %>
-            <div class="col-md-6">
-                <div style="
-                    background-color: #fff;
-                    border: 1px solid #ddd;
-                    border-radius: 14px;
-                    padding: 1rem 1.2rem;
-                    height: 100%;
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-                ">  
-                    <p style="margin: 0; font-size: 1.5rem;line-height: 1.5;"><strong>@<%= review.author.username %></strong></p>
-                    <p style="margin: 0; font-size: 1rem; color: #555; line-height: 1.5;">
-                        <strong style="color: #000;">Comment:</strong>
-                        <%= review.comment %>
-                    </p>
-                    <p style="margin: 0 0 0.5rem 0; font-size: 1.1rem; color: #222;">
-                        <strong style="color: #000;">Rating:</strong>
-                        <span class="starability-result" data-rating="<%= review.rating %>">
-                            Rated: <%= review.rating %> stars
-                        </span>
-                    </p>
-                    <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
-                        <button class="btn btn-outline-dark">Delete</button>
-                    </form>
+    <div class="listing-hero mb-4">
+        <img src="<%= listing.image.url %>" alt="<%= listing.title %>" class="listing-hero-img" />
+    </div>
+
+    <div class="row g-5">
+        <div class="col-lg-8">
+            <div class="host-badge mb-4">
+                <div class="host-avatar">
+                    <i class="fa-solid fa-user"></i>
                 </div>
+                <div>
+                    <div class="host-name">Hosted by <%= listing.owner && listing.owner.username ? listing.owner.username : 'Unknown host' %></div>
+                    <div class="text-muted small">Superhost &middot; 4 years hosting</div>
+                </div>
+            </div>
+            
+            <hr class="my-4">
+
+            <div class="listing-desc mb-4">
+                <h4 class="section-title">About this space</h4>
+                <p class="text-secondary mt-3" style="line-height:1.75;"><%= listing.description %></p>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="map-section mb-4">
+                <h4 class="section-title">Where you'll be</h4>
+                <p class="text-muted mb-3"><i class="fa-solid fa-location-arrow"></i> <%= listing.location %>, <%= listing.country %></p>
+                <div class="map-container shadcn-card p-0">
+                    <div id="map"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="shadcn-card sticky-pricing-card">
+                <div class="d-flex align-items-baseline gap-2 mb-4">
+                    <span class="price-display">&#8377;<%= listing.price != null ? listing.price.toLocaleString('en-IN') : 'N/A' %></span>
+                    <span class="text-muted">/ night</span>
+                </div>
+
+                <% if (currUser && listing.owner && currUser._id.equals(listing.owner._id)) { %>
+                    <div class="d-flex flex-column gap-3">
+                        <form action="/listings/<%= listing._id %>/edit" method="GET" class="w-100">
+                            <button class="btn-reserve w-100" style="background:#222;">Edit Listing</button>
+                        </form>
+                        <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE" class="w-100">
+                            <button class="btn-outline-shadcn w-100" style="border-color:var(--red); color:var(--red);">Delete Listing</button>
+                        </form>
+                    </div>
+                <% } else { %>
+                    <button class="btn-reserve mb-2">Reserve</button>
+                    <div class="text-center text-muted small">You won't be charged yet</div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    
+    <hr class="my-5">
+
+    <div class="reviews-section mb-5">
+        <h4 class="section-title mb-4">
+            <i class="fa-solid fa-star text-warning"></i> 
+            <%= listing.reviews.length > 0 ? listing.reviews.length + ' Reviews' : 'No reviews yet' %>
+        </h4>
+
+        <% if(currUser) { %>
+            <div class="shadcn-card mb-5">
+                <h5 class="mb-3" style="font-weight:600;">Leave a Review</h5>
+                <form method="POST" action="/listings/<%= listing._id %>/reviews" novalidate class="needs-validation">
+                    <div class="mb-3">
+                        <fieldset class="starability-slot">
+                            <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" checked aria-label="No rating." />
+                            <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                            <label for="first-rate1" title="Terrible">1 star</label>
+                            <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                            <label for="first-rate2" title="Not good">2 stars</label>
+                            <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                            <label for="first-rate3" title="Average">3 stars</label>
+                            <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                            <label for="first-rate4" title="Very good">4 stars</label>
+                            <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                            <label for="first-rate5" title="Amazing">5 stars</label>
+                        </fieldset>
+                    </div>
+                    <div class="mb-3">
+                        <label for="comment" class="form-label text-muted">How was your experience?</label>
+                        <textarea name="review[comment]" id="comment" class="form-control" rows="4" required style="border-radius:0.5rem;"></textarea>
+                        <div class="invalid-feedback">Please write a little bit about your experience.</div>
+                    </div>
+                    <button class="btn btn-dark" style="border-radius:0.5rem; padding:0.5rem 1.5rem;">Submit Review</button>
+                </form>
+            </div>
+        <% } else { %>
+            <div class="alert alert-secondary">
+                You must be <a href="/login">logged in</a> to leave a review.
             </div>
         <% } %>
-    <% } else { %>
-        <p style="color: #777; font-size: 1rem;">No reviews yet.</p>
-    <% } %>
-     
-   </div>
-</div>
-<% } %>
-    <div class="offset-3 col-8 mb-3">
-        <h3>where you'll be</h3>
-        <div id="map" style="height: 400px; border-radius: 8px;">
-        </div>
+
+        <% if(listing.reviews.length > 0) { %>
+            <div class="row g-4">
+                <% for (review of listing.reviews) { %>
+                    <div class="col-md-6">
+                        <div class="shadcn-card review-card">
+                            <div class="review-header">
+                                <div class="review-avatar">
+                                    <%= review.author.username.charAt(0).toUpperCase() %>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 fw-bold">@<%= review.author.username %></h6>
+                                    <div class="text-muted small">
+                                        <p class="starability-result" data-rating="<%= review.rating %>" style="transform: scale(0.6); transform-origin: left; margin:0;">
+                                            Rated: <%= review.rating %> stars
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-secondary mt-2 mb-3" style="font-size:0.95rem;"><%= review.comment %></p>
+                            <% if (currUser && review.author._id.equals(currUser._id)) { %>
+                            <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+                                <button class="btn btn-sm btn-outline-danger" style="border-radius: 0.5rem;">Delete</button>
+                            </form>
+                            <% } %>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        <% } %>
     </div>
 </div>
 
-    <script
-    src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.GOOGLE_MAP_API_KEY %>"
-    defer
-    ></script>
-    
-    <script>
-        function initMap() {
-            // Default coordinates (fallback to Delhi if no coordinates available)
-            const latitude = <%= listing.coordinates && listing.coordinates.latitude ? listing.coordinates.latitude : 28.7041 %>;
-            const longitude = <%= listing.coordinates && listing.coordinates.longitude ? listing.coordinates.longitude : 77.1025 %>;
-            
-            const location = { lat: latitude, lng: longitude };
-            
-            const map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 13,
-                center: location,
-                mapTypeId: 'roadmap'
-            });
-            
-            // Add marker at the listing location
-            const marker = new google.maps.Marker({
-                position: location,
-                map: map,
-                title: '<%= listing.title %>',
-                icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
-            });
-            
-            // Add info window to marker
-            const infoWindow = new google.maps.InfoWindow({
-                content: `
-                    <div style="padding: 10px;">
-                        <h4><%= listing.title %></h4>
-                        <p><strong>Location:</strong> <%= listing.location %>, <%= listing.country %></p>
-                        <p><strong>Price:</strong> ₹<%= listing.price %>/night</p>
-                    </div>
-                `,
-                maxWidth: 300
-            });
-            
-            marker.addListener('click', () => {
-                infoWindow.open(map, marker);
-            });
-
-            // Open popup once on load so users can immediately see listing details.
-            infoWindow.open(map, marker);
-        }
+<script src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.GOOGLE_MAP_API_KEY %>" defer></script>
+<script>
+    function initMap() {
+        const latitude = <%= listing.coordinates && listing.coordinates.latitude ? listing.coordinates.latitude : 28.7041 %>;
+        const longitude = <%= listing.coordinates && listing.coordinates.longitude ? listing.coordinates.longitude : 77.1025 %>;
         
-        // Initialize map when page loads
-        window.addEventListener('load', initMap);
-    </script>
-    
-</body>
-</html>
+        const location = { lat: latitude, lng: longitude };
+        const map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 14,
+            center: location,
+            mapTypeId: 'roadmap',
+            disableDefaultUI: true,
+            zoomControl: true,
+            fullscreenControl: true,
+            styles: [
+                { featureType: 'poi', stylers: [{ visibility: 'off' }] }, 
+                { featureType: 'transit', stylers: [{ visibility: 'off' }] }
+            ]
+        });
+        
+        const marker = new google.maps.Marker({
+            position: location,
+            map: map,
+            title: '<%= listing.title %>',
+            icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+            animation: google.maps.Animation.DROP
+        });
+        
+        const infoWindow = new google.maps.InfoWindow({
+            content: `
+                <div style="padding: 10px 5px 5px; font-family: 'Plus Jakarta Sans', sans-serif;">
+                    <h6 style="font-weight:700; margin-bottom: 4px; font-size:1rem;"><%= listing.title %></h6>
+                    <p style="margin-bottom: 0; color:#555; font-size:0.85rem;"><i class="fa-solid fa-location-dot"></i> <%= listing.location %></p>
+                </div>
+            `,
+            maxWidth: 250
+        });
+        
+        marker.addListener('click', () => {
+            infoWindow.open(map, marker);
+        });
+    }
+    window.addEventListener('load', initMap);
+</script>

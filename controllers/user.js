@@ -35,3 +35,7 @@ module.exports.logout = (req,res,next)=>{
         res.redirect('/listings');
     });
 }
+
+module.exports.renderProfile = (req, res) => {
+  res.render('users/profile');
+};

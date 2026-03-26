@@ -2,7 +2,7 @@
   <div class="airbnb-top-row">
     <a class="airbnb-brand" href="/listings" aria-label="Airbnb home">
       <i class="fa-brands fa-airbnb"></i>
-      <span>airbnb</span>
+      <span style="font-size: 1.3rem; font-family: serif;">airbnb</span>
     </a>
 
     <nav class="airbnb-center-tabs" aria-label="Primary navigation">
@@ -28,21 +28,23 @@
         <i class="fa-solid fa-globe"></i>
       </button>
 
-      <div class="dropdown">
-        <button class="icon-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Open menu">
+      <details class="menu-popup-wrap">
+        <summary class="icon-btn menu-summary" aria-label="Open menu">
           <i class="fa-solid fa-bars"></i>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end">
+        </summary>
+
+        <div class="menu-popup" role="menu" aria-hidden="true" data-menu-popup>
           <% if(!currUser) { %>
-            <li><a class="dropdown-item" href="/login">Login</a></li>
-            <li><a class="dropdown-item" href="/signup">Signup</a></li>
+            <a class="menu-popup-item" href="/login" role="menuitem">Login</a>
+            <a class="menu-popup-item" href="/signup" role="menuitem">Signup</a>
           <% } else { %>
-            <li><span class="dropdown-item-text">Hi, <%= currUser.username %></span></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+            <span class="menu-popup-user">Hi, <%= currUser.username %></span>
+            <a class="menu-popup-item" href="/profile" role="menuitem">Profile</a>
+            <a class="menu-popup-item" href="/listings?owner=me" role="menuitem">My Listings</a>
+            <a class="menu-popup-item" href="/logout" role="menuitem">Logout</a>
           <% } %>
-        </ul>
-      </div>
+        </div>
+      </details>
     </div>
   </div>
 

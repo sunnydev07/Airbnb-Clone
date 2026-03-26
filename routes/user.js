@@ -4,7 +4,7 @@ const ExpressError = require('../utils/ExpressError.js');
 const wrapAsync = require('../utils/wrapAsync.js');
 const User = require('../models/user.js');
 const passport = require('passport');
-const { saveRedirectUrl } = require('../middleware.js');
+const { saveRedirectUrl, isLoggedIn } = require('../middleware.js');
 const userController = require('../controllers/user.js');
 const user = require('../models/user.js');
 
@@ -25,5 +25,6 @@ router.route('/login').get(userController.renderLoginForm)
 // router.get('/login',userController.renderLoginForm);
 
 router.get('/logout', userController.logout);
+router.get('/profile', isLoggedIn, userController.renderProfile);
 
 module.exports = router;

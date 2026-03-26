@@ -1,0 +1,38 @@
+<div class="profile-page">
+  <div class="profile-card">
+    <h2>Your Profile</h2>
+    <p><strong>Username:</strong> <%= currUser.username %></p>
+    <p><strong>Email:</strong> <%= currUser.email %></p>
+    <div class="profile-actions">
+      <a href="/listings?owner=me" class="btn btn-dark">My Listings</a>
+      <a href="/listings/createNew" class="btn btn-outline-dark">Create Listing</a>
+    </div>
+  </div>
+</div>
+
+<style>
+.profile-page {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0 2rem;
+}
+
+.profile-card {
+  width: min(100%, 560px);
+  border: 1px solid #e7e7e7;
+  border-radius: 16px;
+  padding: 1.25rem 1.4rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  background: #fff;
+}
+
+.profile-card h2 {
+  margin-bottom: 1rem;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+</style>
