@@ -6,7 +6,7 @@ const { init } = require('../models/review');
 const app = express();
 main().then(()=> console.log("Connected to DB")).catch((err)=> console.log(err));
 async function main(){
-    await mongoose.connect("mongodb://127.0.0.1:27017/airbnb");
+    await mongoose.connect("mongodb+srv://devoppsky07:Indianfac780%40@cluster07.yfdndle.mongodb.net/?appName=Cluster07");
 }
 const initDB = async ()=>{
     await Listing.deleteMany({});
