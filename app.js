@@ -16,24 +16,38 @@ app.use(express.static(path.join(__dirname, "/public")));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const listingsRouter = require('./routes/listing.js')
 const reviewRouter = require('./routes/review.js');
-const MONGO_URL = "mongodb://127.0.0.1:27017/airbnb";
 const cookieParser = require('cookie-parser');
 const flash  = require('connect-flash');
 const session  = require('express-session');
+const connectMongo = require('connect-mongo');
+const MongoStore = connectMongo.default || connectMongo.MongoStore || connectMongo;
 const passport = require('passport');
 const User = require('./models/user.js');
 const userRoutes = require('./routes/user.js');
 const LocalStrategy = require('passport-local').Strategy;
 app.use(cookieParser());
+const dbUrl = process.env.ATLASDB_URL;
 
+const store = MongoStore.create({
+  mongoUrl: dbUrl,
+  crypto: {
+    secret:"process.env.SECRET_KEY"},
+  touchAfter: 24*60*60 // time period in seconds after which the session will be updated in the database even if it is not modified (to reduce database writes)
+  });
+  store.on('error', ()=>{
+    console.log("ERROR in Mongo Session store!");
+  })
 
-const sessionOptions = {secret:"mysuperscretkey", resave:false, saveUninitialized:false,
+const sessionOptions = {
+  store,
+  secret:"process.env.SECRET_KEY", resave:false, saveUninitialized:false,
         cookie:{
             expires:Date.now() + 7*24*60*60*1000,
             maxAge:7*24*60*60*1000,
             httpOnly:true 
         }
 }
+
 app.use(session(sessionOptions));
 app.use(flash());
 
@@ -63,47 +77,30 @@ passport.use(new LocalStrategy({
     return done(null, false, { message: 'Password or username is incorrect' });
   }
 }));
-
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
-
-app.use((req,res,next)=>{      // middleware to set flash message and currUser in res.locals so that it can be accessed in all views
+app.use((req,res,next)=>{    
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     res.locals.currUser = req.user;
     next();
 }
 );
-
-// app.get('/demouser', async(req,res)=>{
-//     let fakeUser = new User({
-//         username:"detal-user",
-//         email:"fakeuser@gmail.com"
-//     });
-//     let newUser = await User.register(fakeUser, "helloworld"); // this method is provided by passport-local-mongoose to register a new user and hash the password)
-//     res.send(newUser);
-// });
-
 main().then(()=>{console.log("Connected successfully to DB1!")}).catch(err=>console.log(err.message));
 
 async function main(){ 
-    await mongoose.connect(MONGO_URL);
+    await mongoose.connect(dbUrl);
 }
-
 app.get('/', (req, res) => {
   res.redirect('/listings');
 });
-
 app.use('/', userRoutes);
 app.use('/listings', listingsRouter);
 app.use('/listings/:id/reviews',reviewRouter);
-
 // 404 handler
 app.use((req,res)=>{
     res.status(404).render('error', {message: 'Page Not Found', statusCode: 404, layout: false});
 });
-
 // Error handling middleware (must be last)
 app.use((err,req,res,next)=>{
     const statusCode = err.statusCode || 500;
@@ -114,7 +111,6 @@ app.use((err,req,res,next)=>{
   }
     res.status(statusCode).render('error', {message, statusCode, layout: false});
 });
-
 app.listen(8080, ()=>{
     console.log('server is listeing on port 8080...');
 })
