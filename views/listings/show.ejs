@@ -57,9 +57,12 @@
                             <button class="btn-outline-shadcn w-100" style="border-color:var(--red); color:var(--red);">Delete Listing</button>
                         </form>
                     </div>
-                <% } else { %>
-                    <button class="btn-reserve mb-2">Reserve</button>
+                <% } else if (!currUser) { %>
+                    <a href="/login" class="btn-reserve mb-2 d-block text-center text-decoration-none">Reserve</a>
                     <div class="text-center text-muted small">You won't be charged yet</div>
+                <% } else { %>
+                    <button class="btn-reserve mb-2" disabled style="opacity:0.6; cursor:not-allowed;">Reserved</button>
+                    <div class="text-center text-muted small">You have already logged in</div>
                 <% } %>
             </div>
         </div>
