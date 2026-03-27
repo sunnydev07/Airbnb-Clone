@@ -59,18 +59,117 @@
 
   <div class="airbnb-search-wrap">
     <div class="airbnb-search-pill">
-      <button type="button" class="search-segment">
-        <strong>Where</strong>
-        <span>Search destinations</span>
-      </button>
-      <button type="button" class="search-segment">
-        <strong>When</strong>
-        <span>Add dates</span>
-      </button>
-      <button type="button" class="search-segment">
-        <strong>Who</strong>
-        <span>Add guests</span>
-      </button>
+
+      <!-- WHERE -->
+      <div class="search-segment-wrap" data-panel="where">
+        <button type="button" class="search-segment" data-panel-toggle="where">
+          <strong>Where</strong>
+          <span class="segment-value" id="where-value">Search destinations</span>
+        </button>
+        <div class="search-dropdown where-dropdown" id="where-panel">
+          <a href="#" class="dest-item" data-dest="Nearby">
+            <span class="dest-icon"><i class="fa-solid fa-location-arrow"></i></span>
+            <div><strong>Nearby</strong><span class="dest-sub">Find what's around you</span></div>
+          </a>
+          <div class="dest-heading">Suggested destinations</div>
+          <a href="#" class="dest-item" data-dest="North Goa, Goa">
+            <span class="dest-icon"><i class="fa-solid fa-umbrella-beach"></i></span>
+            <div><strong>North Goa, Goa</strong><span class="dest-sub">Popular beach destination</span></div>
+          </a>
+          <a href="#" class="dest-item" data-dest="Udaipur, Rajasthan">
+            <span class="dest-icon"><i class="fa-solid fa-landmark"></i></span>
+            <div><strong>Udaipur, Rajasthan</strong><span class="dest-sub">For its stunning architecture</span></div>
+          </a>
+          <a href="#" class="dest-item" data-dest="Gurgaon District, Haryana">
+            <span class="dest-icon"><i class="fa-solid fa-city"></i></span>
+            <div><strong>Gurgaon District, Haryana</strong><span class="dest-sub">Popular with travellers near you</span></div>
+          </a>
+          <a href="#" class="dest-item" data-dest="New Delhi, Delhi">
+            <span class="dest-icon"><i class="fa-solid fa-building-columns"></i></span>
+            <div><strong>New Delhi, Delhi</strong><span class="dest-sub">For sights like India Gate</span></div>
+          </a>
+          <a href="#" class="dest-item" data-dest="Mumbai, Maharashtra">
+            <span class="dest-icon"><i class="fa-solid fa-building"></i></span>
+            <div><strong>Mumbai, Maharashtra</strong><span class="dest-sub">For its top-notch dining</span></div>
+          </a>
+          <a href="#" class="dest-item" data-dest="Varanasi, Uttar Pradesh">
+            <span class="dest-icon"><i class="fa-solid fa-om"></i></span>
+            <div><strong>Varanasi, Uttar Pradesh</strong><span class="dest-sub">A hidden gem</span></div>
+          </a>
+        </div>
+      </div>
+
+      <!-- WHEN -->
+      <div class="search-segment-wrap" data-panel="when">
+        <button type="button" class="search-segment" data-panel-toggle="when">
+          <strong>When</strong>
+          <span class="segment-value" id="when-value">Add dates</span>
+        </button>
+        <div class="search-dropdown when-dropdown" id="when-panel">
+          <div class="when-layout">
+            <div class="when-quick-picks">
+              <button class="quick-pick" data-pick="today">
+                <strong>Today</strong>
+                <span class="quick-pick-sub" id="pick-today"></span>
+              </button>
+              <button class="quick-pick" data-pick="tomorrow">
+                <strong>Tomorrow</strong>
+                <span class="quick-pick-sub" id="pick-tomorrow"></span>
+              </button>
+              <button class="quick-pick" data-pick="weekend">
+                <strong>This weekend</strong>
+                <span class="quick-pick-sub" id="pick-weekend"></span>
+              </button>
+            </div>
+            <div class="when-calendar">
+              <div class="cal-header">
+                <button class="cal-nav" id="cal-prev"><i class="fa-solid fa-chevron-left"></i></button>
+                <span class="cal-month-year" id="cal-month-year"></span>
+                <button class="cal-nav" id="cal-next"><i class="fa-solid fa-chevron-right"></i></button>
+              </div>
+              <div class="cal-weekdays">
+                <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+              </div>
+              <div class="cal-days" id="cal-days"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WHO -->
+      <div class="search-segment-wrap" data-panel="who">
+        <button type="button" class="search-segment" data-panel-toggle="who">
+          <strong>Who</strong>
+          <span class="segment-value" id="who-value">Add guests</span>
+        </button>
+        <div class="search-dropdown who-dropdown" id="who-panel">
+          <div class="guest-row">
+            <div class="guest-info"><strong>Adults</strong><span>Ages 13 or above</span></div>
+            <div class="guest-counter">
+              <button class="counter-btn" data-guest="adults" data-action="dec"><i class="fa-solid fa-minus"></i></button>
+              <span class="counter-val" id="count-adults">0</span>
+              <button class="counter-btn" data-guest="adults" data-action="inc"><i class="fa-solid fa-plus"></i></button>
+            </div>
+          </div>
+          <div class="guest-row">
+            <div class="guest-info"><strong>Children</strong><span>Ages 2–12</span></div>
+            <div class="guest-counter">
+              <button class="counter-btn" data-guest="children" data-action="dec"><i class="fa-solid fa-minus"></i></button>
+              <span class="counter-val" id="count-children">0</span>
+              <button class="counter-btn" data-guest="children" data-action="inc"><i class="fa-solid fa-plus"></i></button>
+            </div>
+          </div>
+          <div class="guest-row">
+            <div class="guest-info"><strong>Infants</strong><span>Under 2</span></div>
+            <div class="guest-counter">
+              <button class="counter-btn" data-guest="infants" data-action="dec"><i class="fa-solid fa-minus"></i></button>
+              <span class="counter-val" id="count-infants">0</span>
+              <button class="counter-btn" data-guest="infants" data-action="inc"><i class="fa-solid fa-plus"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <button type="button" class="search-go" aria-label="Search">
         <i class="fa-solid fa-magnifying-glass"></i>
       </button>

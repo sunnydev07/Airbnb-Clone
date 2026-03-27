@@ -320,9 +320,11 @@ video {
     justify-content: center;
     max-height: 120px;
     opacity: 1;
-    overflow: hidden;
+    overflow: visible;
     transform: translateY(0);
     transition: max-height 0.24s ease, opacity 0.2s ease, transform 0.24s ease, margin-top 0.24s ease;
+    position: relative;
+    z-index: 1300;
 }
 
 .airbnb-search-pill {
@@ -335,6 +337,8 @@ video {
     padding: 0.2rem 0.2rem 0.2rem 0.55rem;
     background: #fff;
     transition: box-shadow 0.25s ease;
+    overflow: visible;
+    position: relative;
 }
 
 .airbnb-search-pill:hover {
@@ -381,6 +385,328 @@ video {
 
 .search-go:hover {
     background: var(--red-dark);
+}
+
+/* ── Search Dropdown Panels ─────────────────────── */
+.search-segment-wrap {
+    flex: 1 1 0;
+    position: relative;
+}
+
+.search-segment-wrap .search-segment {
+    width: 100%;
+    cursor: pointer;
+    border-radius: 999px;
+    transition: background 0.18s, box-shadow 0.18s;
+}
+
+.search-segment-wrap.is-active .search-segment {
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    border-radius: 999px;
+}
+
+.search-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 18px);
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.16);
+    border: 1px solid #e8e8e8;
+    z-index: 1400;
+    animation: dropdownFadeIn 0.22s ease;
+}
+
+.search-segment-wrap.is-active .search-dropdown {
+    display: block;
+}
+
+@keyframes dropdownFadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* WHERE dropdown */
+.where-dropdown {
+    left: 0;
+    width: 400px;
+    padding: 0.6rem 0;
+    max-height: 420px;
+    overflow-y: auto;
+}
+
+.dest-heading {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #6a6a6a;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0.75rem 1.1rem 0.35rem;
+}
+
+.dest-item {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.65rem 1.1rem;
+    text-decoration: none;
+    color: #222;
+    transition: background 0.15s;
+}
+
+.dest-item:hover {
+    background: #f5f5f5;
+    color: #222;
+}
+
+.dest-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: #555;
+    flex-shrink: 0;
+}
+
+.dest-item div {
+    display: flex;
+    flex-direction: column;
+}
+
+.dest-item strong {
+    font-size: 0.92rem;
+    font-weight: 600;
+}
+
+.dest-sub {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 0.1rem;
+}
+
+/* WHEN dropdown */
+.when-dropdown {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 560px;
+    padding: 1.2rem 1.4rem;
+}
+
+.when-layout {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.when-quick-picks {
+    flex: 0 0 160px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    border-right: 1px solid #ebebeb;
+    padding-right: 1.2rem;
+}
+
+.quick-pick {
+    border: none;
+    background: transparent;
+    text-align: left;
+    padding: 0.72rem 0.8rem;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    flex-direction: column;
+}
+
+.quick-pick:hover {
+    background: #f5f5f5;
+}
+
+.quick-pick.selected {
+    background: #f0f0f0;
+}
+
+.quick-pick strong {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #222;
+}
+
+.quick-pick-sub {
+    font-size: 0.78rem;
+    color: #888;
+    margin-top: 0.1rem;
+}
+
+.when-calendar {
+    flex: 1;
+}
+
+.cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+
+.cal-month-year {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #222;
+}
+
+.cal-nav {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+}
+
+.cal-nav:hover {
+    background: #f0f0f0;
+}
+
+.cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #888;
+    margin-bottom: 0.35rem;
+}
+
+.cal-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+
+.cal-day {
+    width: 100%;
+    aspect-ratio: 1;
+    border: none;
+    background: transparent;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #222;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, color 0.15s;
+}
+
+.cal-day:hover {
+    background: #f0f0f0;
+}
+
+.cal-day.today {
+    font-weight: 800;
+    color: var(--red);
+}
+
+.cal-day.selected {
+    background: #222;
+    color: #fff;
+}
+
+.cal-day.past {
+    color: #ccc;
+    pointer-events: none;
+}
+
+.cal-day.empty {
+    pointer-events: none;
+}
+
+/* WHO dropdown */
+.who-dropdown {
+    right: 0;
+    width: 340px;
+    padding: 1rem 1.3rem;
+}
+
+.guest-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+    border-bottom: 1px solid #ebebeb;
+}
+
+.guest-row:last-child {
+    border-bottom: none;
+}
+
+.guest-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.guest-info strong {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #222;
+}
+
+.guest-info span {
+    font-size: 0.82rem;
+    color: #888;
+}
+
+.guest-counter {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.counter-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #b0b0b0;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    color: #555;
+    transition: border-color 0.15s, color 0.15s;
+}
+
+.counter-btn:hover {
+    border-color: #222;
+    color: #222;
+}
+
+.counter-btn.disabled {
+    border-color: #e0e0e0;
+    color: #e0e0e0;
+    pointer-events: none;
+}
+
+.counter-val {
+    font-size: 1rem;
+    font-weight: 600;
+    min-width: 22px;
+    text-align: center;
+    color: #222;
 }
 
 .airbnb-header.is-compact {
