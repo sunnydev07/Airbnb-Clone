@@ -10,6 +10,31 @@ const normalizeImageUrl = (listing) => {
     }
 };
 
+    const normalizeCoordinates = (listing) => {
+        if (!listing || !listing.coordinates) return null;
+        const lat = Number(listing.coordinates.latitude);
+        const lng = Number(listing.coordinates.longitude);
+        if (Number.isFinite(lat) && Number.isFinite(lng)) {
+            listing.coordinates.latitude = lat;
+            listing.coordinates.longitude = lng;
+            return { latitude: lat, longitude: lng };
+        }
+        return null;
+    };
+
+    const isLikelyPlaceholderCoords = (listing, coords) => {
+        if (!coords) return false;
+        const lat = Number(coords.latitude);
+        const lng = Number(coords.longitude);
+        const nearDelhi = Math.abs(lat - 28.7041) < 0.02 && Math.abs(lng - 77.1025) < 0.02;
+        if (!nearDelhi) return false;
+
+        const location = (listing.location || '').toLowerCase();
+        const country = (listing.country || '').toLowerCase();
+        const isDelhiListing = location.includes('delhi') || country.includes('india');
+        return !isDelhiListing;
+    };
+
 module.exports.index = async(req, res)=>{
     const query = {};
     if (req.query.owner === 'me' && req.user) {
@@ -31,8 +56,18 @@ module.exports.showListing = async (req, res) => {
         req.flash('error', 'Listing not found!');
         return res.redirect('/listings');
     }
+    let mapCoordinates = normalizeCoordinates(listing);
+    const shouldRefresh = !mapCoordinates || isLikelyPlaceholderCoords(listing, mapCoordinates);
+    if (shouldRefresh && listing.location && listing.country) {
+        const coordinates = await geocodeAddress(listing.location, listing.country);
+        if (coordinates) {
+            listing.coordinates = coordinates;
+            await listing.save();
+            mapCoordinates = coordinates;
+        }
+    }
     normalizeImageUrl(listing);
-    res.render('listings/show', { listing });
+    res.render('listings/show', { listing, mapCoordinates });
 };
 module.exports.renderEditForm = async (req, res) => {
     let { id } = req.params;

@@ -27,25 +27,36 @@ const userRoutes = require('./routes/user.js');
 const LocalStrategy = require('passport-local').Strategy;
 app.use(cookieParser());
 const dbUrl = process.env.ATLASDB_URL;
+const sessionSecret = process.env.SECRET_KEY || process.env.SECRRET_KEY || 'mysupersecretkey';
 
-const store = MongoStore.create({
-  mongoUrl: dbUrl,
-  crypto: {
-    secret:"process.env.SECRET_KEY"},
-  touchAfter: 24*60*60 // time period in seconds after which the session will be updated in the database even if it is not modified (to reduce database writes)
+let store;
+if (dbUrl) {
+  store = MongoStore.create({
+    mongoUrl: dbUrl,
+    crypto: {
+      secret: sessionSecret
+    },
+    touchAfter: 24 * 60 * 60 // time period in seconds after which session is updated in db
   });
-  store.on('error', ()=>{
-    console.log("ERROR in Mongo Session store!");
-  })
+
+  store.on('error', () => {
+    console.log('ERROR in Mongo Session store!');
+  });
+}
 
 const sessionOptions = {
-  store,
-  secret:"process.env.SECRET_KEY", resave:false, saveUninitialized:false,
+  secret: sessionSecret,
+  resave:false,
+  saveUninitialized:false,
         cookie:{
             expires:Date.now() + 7*24*60*60*1000,
             maxAge:7*24*60*60*1000,
             httpOnly:true 
         }
+}
+
+if (store) {
+  sessionOptions.store = store;
 }
 
 app.use(session(sessionOptions));
@@ -89,6 +100,10 @@ app.use((req,res,next)=>{
 main().then(()=>{console.log("Connected successfully to DB1!")}).catch(err=>console.log(err.message));
 
 async function main(){ 
+    if (!dbUrl) {
+      console.log('ATLASDB_URL is missing. App started without DB connection.');
+      return;
+    }
     await mongoose.connect(dbUrl);
 }
 app.get('/', (req, res) => {

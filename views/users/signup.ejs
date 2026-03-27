@@ -98,7 +98,7 @@
 </div>
 
 <style>
-  .signup-page { background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08), transparent 30%), radial-gradient(circle at 80% 0%, rgba(255,255,255,0.06), transparent 30%), #0b1220; color: #e5e7eb; min-height: 100vh; }
+  .signup-page { background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08), transparent 30%), radial-gradient(circle at 80% 0%, rgba(255,255,255,0.06), transparent 30%), #0b1220; color: #e5e7eb; min-height: calc(var(--vh, 1vh) * 100); }
   .text-accent { color: #ff6b81; }
   .text-secondary { color: #9ca3af; }
   .badge-glow { background: #111827; color: #fff; box-shadow: 0 0 16px rgba(255,255,255,0.08); }
@@ -113,6 +113,16 @@
   .btn-outline-ink:hover { border-color: #ff6b81; color: #fff; }
   .form-check-input { background-color: #0f172a; border: 1px solid #1f2937; }
   .form-check-input:checked { background-color: #ff6b81; border-color: #ff6b81; }
+
+  @media (max-width: 768px) {
+    .signup-page .display-5 {
+      font-size: clamp(2rem, 6vw, 2.6rem);
+    }
+
+    .signup-page .row {
+      text-align: center;
+    }
+  }
 </style>
 
 <script>

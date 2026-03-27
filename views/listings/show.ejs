@@ -138,47 +138,77 @@
     </div>
 </div>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.GOOGLE_MAP_API_KEY %>" defer></script>
 <script>
     function initMap() {
-        const latitude = <%= listing.coordinates && listing.coordinates.latitude ? listing.coordinates.latitude : 28.7041 %>;
-        const longitude = <%= listing.coordinates && listing.coordinates.longitude ? listing.coordinates.longitude : 77.1025 %>;
-        
-        const location = { lat: latitude, lng: longitude };
+        const address = <%- JSON.stringify(`${listing.location}, ${listing.country}`) %>;
+        const listingTitle = <%- JSON.stringify(listing.title) %>;
+        const listingLocation = <%- JSON.stringify(listing.location) %>;
+
+        const storedLat = <%- JSON.stringify(mapCoordinates && mapCoordinates.latitude != null ? mapCoordinates.latitude : null) %>;
+        const storedLng = <%- JSON.stringify(mapCoordinates && mapCoordinates.longitude != null ? mapCoordinates.longitude : null) %>;
+        const hasStoredCoords = typeof storedLat === 'number'
+            && typeof storedLng === 'number'
+            && Number.isFinite(storedLat)
+            && Number.isFinite(storedLng);
+
+        // Start with stored coordinates or a temporary center
+        const tempCenter = hasStoredCoords ? { lat: storedLat, lng: storedLng } : { lat: 20, lng: 0 };
+
         const map = new google.maps.Map(document.getElementById('map'), {
             zoom: 14,
-            center: location,
+            center: tempCenter,
             mapTypeId: 'roadmap',
             disableDefaultUI: true,
             zoomControl: true,
             fullscreenControl: true,
             styles: [
-                { featureType: 'poi', stylers: [{ visibility: 'off' }] }, 
+                { featureType: 'poi', stylers: [{ visibility: 'off' }] },
                 { featureType: 'transit', stylers: [{ visibility: 'off' }] }
             ]
         });
-        
-        const marker = new google.maps.Marker({
-            position: location,
-            map: map,
-            title: '<%= listing.title %>',
-            icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-            animation: google.maps.Animation.DROP
-        });
-        
+
         const infoWindow = new google.maps.InfoWindow({
             content: `
                 <div style="padding: 10px 5px 5px; font-family: 'Plus Jakarta Sans', sans-serif;">
-                    <h6 style="font-weight:700; margin-bottom: 4px; font-size:1rem;"><%= listing.title %></h6>
-                    <p style="margin-bottom: 0; color:#555; font-size:0.85rem;"><i class="fa-solid fa-location-dot"></i> <%= listing.location %></p>
+                    <h6 style="font-weight:700; margin-bottom: 4px; font-size:1rem;">${listingTitle}</h6>
+                    <p style="margin-bottom: 0; color:#555; font-size:0.85rem;"><i class="fa-solid fa-location-dot"></i> ${listingLocation}</p>
                 </div>
             `,
             maxWidth: 250
         });
-        
-        marker.addListener('click', () => {
-            infoWindow.open(map, marker);
+
+        const placeMarker = (position) => {
+            const marker = new google.maps.Marker({
+                position,
+                map,
+                title: listingTitle,
+                icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+                animation: google.maps.Animation.DROP
+            });
+            marker.addListener('click', () => {
+                infoWindow.open(map, marker);
+            });
+        };
+
+        // Always geocode using Google Maps to get the accurate location
+        const geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ address: address }, (results, status) => {
+            if (status === 'OK' && results[0]) {
+                const location = results[0].geometry.location;
+                map.setCenter(location);
+                map.setZoom(14);
+                placeMarker(location);
+            } else if (hasStoredCoords) {
+                // Geocoding failed, fall back to stored coordinates
+                map.setCenter(tempCenter);
+                placeMarker(tempCenter);
+            } else {
+                // Last resort: show a message in the map area
+                console.warn('Could not geocode address:', address, 'Status:', status);
+                document.getElementById('map').innerHTML =
+                    '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#888;font-size:1rem;">Map location unavailable for this listing</div>';
+            }
         });
     }
-    window.addEventListener('load', initMap);
 </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.GOOGLE_MAP_API_KEY %>&callback=initMap" async defer></script>
