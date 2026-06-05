@@ -1,57 +1,75 @@
-<div class="row justify-content-center new-listing-row">
-    <div class="col-lg-8 col-md-10">
-        <div class="new-listing-card form-control" style="background-color:beige; font-weight: bold;">
-        <h3>Create a new listing</h3>
-        <form action="/listings/add" method="POST" novalidate class="needs-validation" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label class="form-label" for="title">Title</label>
-                <input name="listing[title]" placeholder="add a catchy title" type="text" class="form-control" required>
-                <div class="valid-feedback">
-      Looks good!
-    </div>
-            </div>
-            <div class="mb-3">
-                <label class="form-label" for="description">Description</label>
-                <textarea name="listing[description]" placeholder="enter description" type="text" class="form-control" required></textarea>
-            </div>
-            <div class="mb-3">
-                <label class="form-label" for="title">Upload Image</label>
-                <input name="image" class="form-control" type="file" accept="image/*">
-            </div>
-            <div class="mb-3">
-                <label class="form-label" for="title">Image URL (optional)</label>
-                <input name="listing[image][url]" placeholder="enter image URL" class="form-control" type="text">
-            </div>
-            <div class="mb-4">
-                <label class="form-label" for="title">Price</label>
-                <input name="listing[price]" placeholder="enter price" class="form-control" type="text">
-                <div class="invalid-feedback">please enter a valid price</div>
-            </div>
-            <div class="row">
-                <div class="mb-3 col-md-4">
-                <label class="form-label" for="title">Location</label>
-                <input name="listing[location]" placeholder="enter location" class="form-control" type="text">
-                <div class="invalid-feedback">please enter a valid location</div>
-            </div>
-            <div class="mb-3 col-md-8" >
-                <label class="form-label" for="title">Country</label>
-                <input name="listing[country]" placeholder="enter country" class="form-control" type="text">
-                <div class="invalid-feedback">please enter a valid country</div><br>
-            </div>
-            </div>
-           
-                <button class="btn" style="background-color: #ff385c;">Add</button>        
-        
-        
-        
-        
-        
-        
-        
-        
-    </form>
+<section class="listing-form-page">
+    <div class="listing-form-card">
+        <div class="listing-form-header">
+            <span class="listing-form-badge"><i class="fa-solid fa-wand-magic-sparkles"></i> New stay</span>
+            <h2>Create a new listing</h2>
+            <p>Add the essentials travelers need to understand your space.</p>
         </div>
+
+        <form action="/listings/add" method="POST" novalidate class="needs-validation listing-form" enctype="multipart/form-data">
+            <div class="listing-field">
+                <label for="title">Title</label>
+                <input id="title" name="listing[title]" placeholder="Cozy loft near the old city" type="text" required>
+                <div class="valid-feedback">Looks good!</div>
+            </div>
+
+            <div class="listing-field">
+                <label for="description">Description</label>
+                <textarea id="description" name="listing[description]" placeholder="Describe the rooms, vibe, views, and what makes it special." rows="5" required></textarea>
+                <div class="invalid-feedback">Please add a description.</div>
+            </div>
+
+            <div class="listing-form-grid">
+                <div class="listing-field">
+                    <label for="price">Price per night</label>
+                    <div class="listing-price-input">
+                        <span>&#8377;</span>
+                        <input id="price" name="listing[price]" placeholder="3500" type="number" min="0" required>
+                    </div>
+                    <div class="invalid-feedback">Please enter a valid price.</div>
+                </div>
+
+                <div class="listing-field">
+                    <label for="location">Location</label>
+                    <input id="location" name="listing[location]" placeholder="Jaipur" type="text" required>
+                    <div class="invalid-feedback">Please enter a valid location.</div>
+                </div>
+            </div>
+
+            <div class="listing-field">
+                <label for="country">Country</label>
+                <input id="country" name="listing[country]" placeholder="India" type="text" required>
+                <div class="invalid-feedback">Please enter a valid country.</div>
+            </div>
+
+            <div class="listing-media-panel">
+                <div class="listing-field">
+                    <label for="image-upload">Upload Image</label>
+                    <div class="listing-file-upload">
+                        <input id="image-upload" name="image" type="file" accept="image/*">
+                        <span class="listing-file-label">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <span>Choose a file</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="listing-field">
+                    <label for="image-url">Image URL (optional)</label>
+                    <input id="image-url" name="listing[image][url]" placeholder="https://images.example.com/stay.jpg" type="url">
+                </div>
+            </div>
+
+            <div class="listing-form-actions">
+                <a href="/listings" class="listing-cancel-btn">
+                    <i class="fa-solid fa-xmark"></i>
+                    Cancel
+                </a>
+                <button class="listing-submit-btn" type="submit">
+                    <i class="fa-solid fa-check"></i>
+                    Publish listing
+                </button>
+            </div>
+        </form>
     </div>
-</div>
- 
-    
+</section>

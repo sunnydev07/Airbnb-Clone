@@ -1,27 +1,85 @@
-<%= success %>
-<div class="listings-header">
-    <h3>Welcome to Airbnb</h3>
-    <a href="/listings/createNew" class="btn-add-listing">
-        <i class="fa-solid fa-plus"></i> New Listing
-    </a>
-</div>
+<section class="listings-header listings-header-enhanced">
+    <div>
+        <% if (typeof databaseUnavailable !== 'undefined' && databaseUnavailable) { %>
+            <p class="listing-eyebrow">Database offline</p>
+            <h3>Listings are unavailable</h3>
+            <p class="listing-results-meta">Add `ATLASDB_URL` to your environment to load saved stays.</p>
+        <% } else if (searchQuery) { %>
+            <p class="listing-eyebrow">Search results</p>
+            <h3>Stays matching "<%= searchQuery %>"</h3>
+            <p class="listing-results-meta">
+                <%= allListing.length %> <%= allListing.length === 1 ? 'place' : 'places' %> found
+                <% if (isOwnerView) { %>
+                    in your listings
+                <% } %>
+            </p>
+        <% } else if (isOwnerView) { %>
+            <p class="listing-eyebrow">Hosting dashboard</p>
+            <h3>Your listed stays</h3>
+            <p class="listing-results-meta"><%= allListing.length %> active <%= allListing.length === 1 ? 'listing' : 'listings' %></p>
+        <% } else { %>
+            <p class="listing-eyebrow">Explore homes</p>
+            <h3>Welcome to Airbnb</h3>
+            <p class="listing-results-meta">Find handpicked stays by destination, country, or listing title.</p>
+        <% } %>
+    </div>
 
-<div class="listings-grid">
-    <% for(let listings of allListing){ %>
-    <div class="listing-card">
-        <a href="/listings/<%= listings._id %>" class="listing-card-link">
-            <div class="listing-img-wrapper">
-                <img src="<%= listings.image.url %>" class="listing-img" alt="<%= listings.title %>">
-            </div>
-            <div class="listing-info m-2">
-                <h5 class="listing-title"><%= listings.title %></h5>
-                <p class="listing-location">
-                    <i class="fa-solid fa-location-dot"></i>
-                    <%= listings.location %>, <%= listings.country %>
-                </p>
-                <p class="listing-price"><%= listings.price %> <span>/ night</span></p>
-            </div>
+    <div class="listings-header-actions">
+        <% if (searchQuery) { %>
+            <a href="<%= isOwnerView ? '/listings?owner=me' : '/listings' %>" class="btn-clear-search">
+                <i class="fa-solid fa-xmark"></i>
+                Clear search
+            </a>
+        <% } %>
+        <a href="/listings/createNew" class="btn-add-listing">
+            <i class="fa-solid fa-plus"></i> New Listing
         </a>
     </div>
-    <% } %>
-</div>
+</section>
+
+<% if (allListing.length > 0) { %>
+    <div class="listings-grid">
+        <% for(let listings of allListing){ %>
+            <article class="listing-card">
+                <a href="/listings/<%= listings._id %>" class="listing-card-link">
+                    <div class="listing-img-wrapper">
+                        <img src="<%= listings.image.url %>" class="listing-img" alt="<%= listings.title %>">
+                    </div>
+                    <div class="listing-info m-2">
+                        <h5 class="listing-title"><%= listings.title %></h5>
+                        <p class="listing-location">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <%= listings.location %>, <%= listings.country %>
+                        </p>
+                        <p class="listing-price">
+                            &#8377;<%= listings.price != null ? Number(listings.price).toLocaleString('en-IN') : 'N/A' %>
+                            <span>/ night</span>
+                        </p>
+                    </div>
+                </a>
+            </article>
+        <% } %>
+    </div>
+<% } else { %>
+    <section class="listings-empty-state">
+        <div class="empty-state-icon">
+            <i class="fa-solid fa-magnifying-glass-location"></i>
+        </div>
+        <% if (typeof databaseUnavailable !== 'undefined' && databaseUnavailable) { %>
+            <h4>Database connection missing</h4>
+            <p>The app is running, but MongoDB is not configured. Add `ATLASDB_URL` to `.env` to show listings.</p>
+        <% } else if (searchQuery) { %>
+            <h4>No stays found for "<%= searchQuery %>"</h4>
+            <p>Try a city, country, landmark, or a simpler destination term.</p>
+            <a href="<%= isOwnerView ? '/listings?owner=me' : '/listings' %>" class="btn-add-listing">View all listings</a>
+        <% } else if (isOwnerView) { %>
+            <h4>You have not listed a stay yet</h4>
+            <p>Create your first listing and it will appear here with your hosting stats.</p>
+            <a href="/listings/createNew" class="btn-add-listing">Create your first listing</a>
+        <% } else { %>
+            <h4>No listings available yet</h4>
+            <p>Check back soon or become the first host to add a stay.</p>
+            <a href="/listings/createNew" class="btn-add-listing">Create a listing</a>
+        <% } %>
+    </section>
+<% } %>

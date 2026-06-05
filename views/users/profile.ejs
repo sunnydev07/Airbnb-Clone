@@ -1,52 +1,127 @@
-<div class="profile-page">
-  <div class="profile-card">
-    <h2>Your Profile</h2>
-    <p><strong>Username:</strong> <%= currUser.username %></p>
-    <p><strong>Email:</strong> <%= currUser.email %></p>
-    <div class="profile-actions">
-      <a href="/listings?owner=me" class="btn btn-dark">My Listings</a>
-      <a href="/listings/createNew" class="btn btn-outline-dark">Create Listing</a>
+<%
+  const profileInitial = currUser.username ? currUser.username.charAt(0).toUpperCase() : 'U';
+  const memberSinceText = profileStats.memberSince
+    ? profileStats.memberSince.toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })
+    : 'New member';
+%>
+
+<section class="profile-dashboard">
+  <div class="profile-hero-panel">
+    <div class="profile-identity">
+      <div class="profile-avatar" aria-hidden="true"><%= profileInitial %></div>
+      <div>
+        <p class="profile-eyebrow">Your account</p>
+        <h2><%= currUser.username %></h2>
+        <p class="profile-email"><i class="fa-solid fa-envelope"></i> <%= currUser.email %></p>
+      </div>
+    </div>
+
+    <div class="profile-hero-actions">
+      <a href="/listings/createNew" class="profile-primary-action">
+        <i class="fa-solid fa-plus"></i>
+        Create Listing
+      </a>
+      <a href="/listings?owner=me" class="profile-secondary-action">
+        <i class="fa-solid fa-house-user"></i>
+        My Listings
+      </a>
     </div>
   </div>
-</div>
 
-<style>
-.profile-page {
-  display: flex;
-  justify-content: center;
-  padding: 1rem 0 2rem;
-}
+  <div class="profile-stats-grid" aria-label="Profile statistics">
+    <article class="profile-stat-card">
+      <span class="profile-stat-icon"><i class="fa-solid fa-house"></i></span>
+      <div>
+        <strong><%= profileStats.listingCount %></strong>
+        <span>Active <%= profileStats.listingCount === 1 ? 'listing' : 'listings' %></span>
+      </div>
+    </article>
 
-.profile-card {
-  width: min(100%, 560px);
-  border: 1px solid #e7e7e7;
-  border-radius: 16px;
-  padding: 1.25rem 1.4rem;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-  background: #fff;
-}
+    <article class="profile-stat-card">
+      <span class="profile-stat-icon"><i class="fa-solid fa-star"></i></span>
+      <div>
+        <strong><%= profileStats.reviewCount %></strong>
+        <span>Total <%= profileStats.reviewCount === 1 ? 'review' : 'reviews' %></span>
+      </div>
+    </article>
 
-.profile-card h2 {
-  margin-bottom: 1rem;
-}
+    <article class="profile-stat-card">
+      <span class="profile-stat-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span>
+      <div>
+        <strong><%= profileStats.averagePrice ? profileStats.averagePrice.toLocaleString('en-IN') : '0' %></strong>
+        <span>Average nightly price</span>
+      </div>
+    </article>
 
-.profile-actions {
-  display: flex;
-  gap: 0.6rem;
-  margin-top: 1rem;
-}
+    <article class="profile-stat-card">
+      <span class="profile-stat-icon"><i class="fa-solid fa-calendar-check"></i></span>
+      <div>
+        <strong><%= memberSinceText %></strong>
+        <span>Member since</span>
+      </div>
+    </article>
+  </div>
 
-@media (max-width: 600px) {
-  .profile-page {
-    padding: 0.5rem 0 1.5rem;
-  }
+  <div class="profile-content-grid">
+    <section class="profile-panel">
+      <div class="profile-section-heading">
+        <div>
+          <p class="profile-eyebrow">Hosting snapshot</p>
+          <h3>Recent listings</h3>
+        </div>
+        <% if (ownedListings.length > 3) { %>
+          <a href="/listings?owner=me">View all</a>
+        <% } %>
+      </div>
 
-  .profile-actions {
-    flex-direction: column;
-  }
+      <% if (recentListings.length > 0) { %>
+        <div class="profile-listing-stack">
+          <% for (let listing of recentListings) { %>
+            <a href="/listings/<%= listing._id %>" class="profile-listing-row">
+              <div class="profile-listing-thumb">
+                <% if (listing.image && listing.image.url) { %>
+                  <img src="<%= listing.image.url %>" alt="<%= listing.title %>">
+                <% } else { %>
+                  <i class="fa-solid fa-image"></i>
+                <% } %>
+              </div>
+              <div class="profile-listing-copy">
+                <strong><%= listing.title %></strong>
+                <span><%= listing.location %>, <%= listing.country %></span>
+              </div>
+              <div class="profile-listing-price">
+                &#8377;<%= listing.price != null ? Number(listing.price).toLocaleString('en-IN') : 'N/A' %>
+              </div>
+            </a>
+          <% } %>
+        </div>
+      <% } else { %>
+        <div class="profile-empty-panel">
+          <i class="fa-solid fa-door-open"></i>
+          <h4>No listings yet</h4>
+          <p>Your hosted stays will appear here once you create your first listing.</p>
+          <a href="/listings/createNew" class="profile-primary-action">Start hosting</a>
+        </div>
+      <% } %>
+    </section>
 
-  .profile-actions a {
-    width: 100%;
-  }
-}
-</style>
+    <aside class="profile-panel profile-account-panel">
+      <p class="profile-eyebrow">Account details</p>
+      <h3>Ready to host</h3>
+      <div class="profile-detail-list">
+        <div>
+          <span>Username</span>
+          <strong><%= currUser.username %></strong>
+        </div>
+        <div>
+          <span>Email</span>
+          <strong><%= currUser.email %></strong>
+        </div>
+        <div>
+          <span>Profile status</span>
+          <strong>Verified session</strong>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>

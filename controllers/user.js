@@ -1,10 +1,26 @@
 const User = require('../models/user');
+const Listing = require('../models/listing');
+const { isDatabaseConnected } = require('../utils/database');
+
+const normalizeImageUrl = (listing) => {
+  if (!listing || !listing.image || !listing.image.url) return listing;
+  const url = listing.image.url;
+  const isAbsolute = url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/');
+  if (!isAbsolute) {
+    listing.image.url = `/uploads/${url}`;
+  }
+  return listing;
+};
 
 module.exports.renderSignupForm = (req,res)=>{
     res.render('users/signup');
 };
 module.exports.signup = async(req,res)=>{
    try{
+     if (!isDatabaseConnected()) {
+      req.flash('error', 'Database is not connected. Please configure ATLASDB_URL before signing up.');
+      return res.redirect('/signup');
+     }
      let {username, email, password} = req.body;
     const newUser = new User({username, email});
     const registeredUser = await User.register(newUser, password);
@@ -36,6 +52,46 @@ module.exports.logout = (req,res,next)=>{
     });
 }
 
-module.exports.renderProfile = (req, res) => {
-  res.render('users/profile');
+module.exports.renderProfile = async (req, res) => {
+  if (!isDatabaseConnected()) {
+    return res.render('users/profile', {
+      ownedListings: [],
+      recentListings: [],
+      profileStats: {
+        listingCount: 0,
+        reviewCount: 0,
+        averagePrice: 0,
+        memberSince: req.user && req.user._id && typeof req.user._id.getTimestamp === 'function'
+          ? req.user._id.getTimestamp()
+          : null
+      }
+    });
+  }
+
+  const ownedListings = await Listing.find({ owner: req.user._id }).sort({ _id: -1 }).lean();
+  ownedListings.forEach(normalizeImageUrl);
+
+  const totalReviews = ownedListings.reduce((sum, listing) => {
+    return sum + (Array.isArray(listing.reviews) ? listing.reviews.length : 0);
+  }, 0);
+  const pricedListings = ownedListings
+    .map((listing) => Number(listing.price))
+    .filter((price) => Number.isFinite(price));
+  const averagePrice = pricedListings.length
+    ? Math.round(pricedListings.reduce((sum, price) => sum + price, 0) / pricedListings.length)
+    : 0;
+  const memberSince = req.user._id && typeof req.user._id.getTimestamp === 'function'
+    ? req.user._id.getTimestamp()
+    : null;
+
+  res.render('users/profile', {
+    ownedListings,
+    recentListings: ownedListings.slice(0, 3),
+    profileStats: {
+      listingCount: ownedListings.length,
+      reviewCount: totalReviews,
+      averagePrice,
+      memberSince
+    }
+  });
 };

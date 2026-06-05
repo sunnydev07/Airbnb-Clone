@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 require('dotenv').config();
 const mongoose = require('mongoose');
+mongoose.set('bufferCommands', false);
 const Listing = require('./models/listing');
 const path = require('path');
 const methodOverride = require('method-override')
@@ -27,7 +28,10 @@ const userRoutes = require('./routes/user.js');
 const LocalStrategy = require('passport-local').Strategy;
 app.use(cookieParser());
 const dbUrl = process.env.ATLASDB_URL;
-const sessionSecret = process.env.SECRET_KEY || process.env.SECRRET_KEY || 'mysupersecretkey';
+const sessionSecret = process.env.SECRET_KEY || process.env.SECRRET_KEY;
+if (!sessionSecret) {
+    throw new Error('FATAL: SECRET_KEY environment variable is not set. Cannot start without a session secret.');
+}
 
 let store;
 if (dbUrl) {
@@ -97,7 +101,7 @@ app.use((req,res,next)=>{
     next();
 }
 );
-main().then(()=>{console.log("Connected successfully to DB1!")}).catch(err=>console.log(err.message));
+main().catch(err=>console.log(err.message));
 
 async function main(){ 
     if (!dbUrl) {
@@ -105,6 +109,7 @@ async function main(){
       return;
     }
     await mongoose.connect(dbUrl);
+    console.log("Connected successfully to DB1!");
 }
 app.get('/', (req, res) => {
   res.redirect('/listings');

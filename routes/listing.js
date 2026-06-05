@@ -18,7 +18,6 @@ const validateListing = (req, res, next) => {
     }
     next();
 };
-router.get("/", wrapAsync(lisitngController.index));
 // index route
 router.get('/', wrapAsync(lisitngController.index));
 
@@ -26,7 +25,7 @@ router.get('/', wrapAsync(lisitngController.index));
 router.get('/createNew', isLoggedIn, wrapAsync(lisitngController.renderNewForm));
 
 // create route (must come before /:id routes)
-router.post('/add', isLoggedIn, upload.single('image'),wrapAsync(lisitngController.addListing));
+router.post('/add', isLoggedIn, upload.single('image'), validateListing, wrapAsync(lisitngController.addListing));
 
 // edit route
 router.get('/:id/edit', isLoggedIn, isOwner, wrapAsync(lisitngController.renderEditForm));
@@ -35,7 +34,7 @@ router.get('/:id/edit', isLoggedIn, isOwner, wrapAsync(lisitngController.renderE
 router
     .route('/:id')
     .get(wrapAsync(lisitngController.showListing))
-    .put(isLoggedIn, isOwner, upload.single('image'), wrapAsync(lisitngController.updateListing))
+    .put(isLoggedIn, isOwner, upload.single('image'), validateListing, wrapAsync(lisitngController.updateListing))
     .delete(isLoggedIn, isOwner, wrapAsync(lisitngController.deleteListing));
 
 module.exports = router;

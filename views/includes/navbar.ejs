@@ -1,3 +1,4 @@
+<% const navSearchQuery = typeof searchQuery !== 'undefined' ? searchQuery : ''; %>
 <header class="airbnb-header sticky-top">
   <div class="airbnb-top-row">
     <a class="airbnb-brand" href="/listings" aria-label="Airbnb home">
@@ -5,14 +6,16 @@
       <span class="airbnb-wordmark">airbnb</span>
     </a>
 
-    <button type="button" class="airbnb-mini-search" aria-label="Quick search">
-      <span class="mini-segment"><i class="fa-solid fa-house"></i> Anywhere</span>
+    <form class="airbnb-mini-search" action="/listings" method="GET" role="search" aria-label="Quick search">
+      <input type="search" name="q" value="<%= navSearchQuery %>" placeholder="Anywhere" aria-label="Search destinations">
       <span class="mini-divider"></span>
       <span class="mini-segment">Anytime</span>
       <span class="mini-divider"></span>
       <span class="mini-segment muted">Add guests</span>
-      <span class="mini-search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-    </button>
+      <button class="mini-search-icon" type="submit" aria-label="Search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </form>
 
     <nav class="airbnb-center-tabs" aria-label="Primary navigation">
       <a href="/listings" class="tab-item active" aria-current="page">
@@ -58,23 +61,23 @@
   </div>
 
   <div class="airbnb-search-wrap">
-    <div class="airbnb-search-pill">
-      <button type="button" class="search-segment">
+    <form class="airbnb-search-pill" action="/listings" method="GET" role="search" aria-label="Search listings">
+      <label class="search-segment search-where-segment" for="site-search-q">
         <strong>Where</strong>
-        <span>Search destinations</span>
-      </button>
-      <button type="button" class="search-segment">
+        <input id="site-search-q" name="q" value="<%= navSearchQuery %>" placeholder="Search destinations" type="search" autocomplete="off">
+      </label>
+      <div class="search-segment search-segment-disabled" aria-disabled="true">
         <strong>When</strong>
         <span>Add dates</span>
-      </button>
-      <button type="button" class="search-segment">
+      </div>
+      <div class="search-segment search-segment-disabled" aria-disabled="true">
         <strong>Who</strong>
         <span>Add guests</span>
-      </button>
-      <button type="button" class="search-go" aria-label="Search">
+      </div>
+      <button type="submit" class="search-go" aria-label="Search">
         <i class="fa-solid fa-magnifying-glass"></i>
       </button>
-    </div>
+    </form>
   </div>
 </header>
 <div class="navbar-scroll-sentinel" aria-hidden="true"></div>
