@@ -1,214 +1,187 @@
-# 🏠 Airbnb Clone
+# Airbnb Clone
 
-A full-stack vacation rental marketplace built with **Node.js**, **Express**, **MongoDB**, and **EJS**. Users can browse listings, create their own, leave reviews, and view locations on an interactive Google Map — all with secure authentication.
+A full-stack vacation rental marketplace built with Node.js, Express, MongoDB, EJS, Passport, Cloudinary, and Google Maps. Users can browse stays, search destinations, create listings, manage their profile dashboard, leave reviews, and view listing locations on a map.
 
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
-![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
-![EJS](https://img.shields.io/badge/EJS-B4CA65?style=for-the-badge&logo=ejs&logoColor=black)
+## Features
 
----
+- User signup, login, logout, and persistent sessions with Passport.js.
+- Username or email login support.
+- Listing CRUD with owner-only edit and delete permissions.
+- Destination search from the Airbnb-style header using `GET /listings?q=...`.
+- Search matches listing title, description, location, and country.
+- Profile dashboard with account details, listing count, review count, average price, and recent owned listings.
+- Redesigned create-listing form with responsive styling and image upload or image URL fallback.
+- Review creation and deletion with author-only permissions.
+- Google Maps display on listing detail pages.
+- Server-side geocoding with OpenStreetMap Nominatim.
+- Joi validation, flash messages, custom error pages, and no-database fallback messaging.
 
-## ✨ Features
+## Tech Stack
 
-### 🔐 Authentication & Authorization
-- **User Registration & Login** — Secure signup/login with username or email using Passport.js
-- **Password Hashing** — Passwords are hashed and salted automatically via `passport-local-mongoose`
-- **Session Management** — Persistent sessions stored in MongoDB using `connect-mongo`
-- **Authorization Middleware** — Only listing owners can edit/delete their own listings; only review authors can delete their own reviews
-- **Login Redirect** — Users are redirected back to the page they tried to visit after logging in
+| Layer | Technology |
+| --- | --- |
+| Backend | Node.js, Express 5 |
+| Database | MongoDB Atlas, Mongoose |
+| Views | EJS, express-ejs-layouts |
+| Auth | Passport.js, passport-local-mongoose |
+| Sessions | express-session, connect-mongo |
+| Uploads | Multer, Cloudinary |
+| Maps | Google Maps JavaScript API |
+| Geocoding | Google Maps Geocoder, Nominatim |
+| Validation | Joi |
+| Styling | Bootstrap 5, custom CSS |
 
-### 🏡 Listings (CRUD)
-- **Browse All Listings** — View all available vacation rentals on the homepage
-- **Create a Listing** — Add a new listing with title, description, price, location, country, and an image
-- **View Listing Details** — See full details including host info, description, price, reviews, and map
-- **Edit & Delete** — Owners can update or remove their listings
-- **Image Upload** — Images are uploaded and stored on **Cloudinary** via `multer` + `multer-storage-cloudinary`
-
-### 🗺️ Interactive Maps & Geocoding
-- **Google Maps Integration** — Each listing page displays an interactive map centered on the listing's location
-- **Client-Side Geocoding** — The listing's `location + country` text is geocoded via Google Maps Geocoding Service to show the accurate pin on the map
-- **Server-Side Geocoding** — Coordinates are also fetched from OpenStreetMap Nominatim API and stored in the database for faster loading
-- **Marker with Info Window** — Clicking the map marker shows the listing title and location
-
-### ⭐ Reviews
-- **Leave a Review** — Logged-in users can rate (1–5 stars) and write comments on any listing
-- **Star Rating UI** — Beautiful animated star rating widget
-- **Delete Reviews** — Only the review author can delete their review
-- **Cascading Deletes** — When a listing is deleted, all its reviews are automatically removed
-
-### 🛡️ Data Validation & Error Handling
-- **Server-Side Validation** — Request data is validated using **Joi** schemas
-- **Custom Error Pages** — Friendly 404 and error pages
-- **Flash Messages** — Success and error notifications using `connect-flash`
-
----
-
-## 🛠️ Tech Stack
-
-| Layer        | Technology                                     |
-| ------------ | ---------------------------------------------- |
-| **Backend**  | Node.js, Express 5                             |
-| **Database** | MongoDB Atlas, Mongoose ODM                    |
-| **Templating** | EJS, ejs-mate (layouts)                      |
-| **Auth**     | Passport.js, passport-local-mongoose           |
-| **File Upload** | Multer, Cloudinary                          |
-| **Maps**     | Google Maps JavaScript API                     |
-| **Geocoding** | Google Maps Geocoder (client), Nominatim (server) |
-| **Sessions** | express-session, connect-mongo                 |
-| **Validation** | Joi                                          |
-| **Styling**  | Bootstrap 5, Custom CSS                        |
-
----
-
-## 🚀 Installation & Setup
+## Getting Started
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (v18 or higher)
-- [MongoDB Atlas](https://www.mongodb.com/atlas) account (or local MongoDB)
-- [Cloudinary](https://cloudinary.com/) account (for image uploads)
-- [Google Maps API Key](https://console.cloud.google.com/) with **Maps JavaScript API** enabled
+- Node.js 18 or newer
+- MongoDB Atlas connection string
+- Cloudinary account for image uploads
+- Google Maps API key with Maps JavaScript API enabled
 
-### 1. Clone the Repository
+### Clone
 
 ```bash
 git clone https://github.com/sunnydev07/Airbnb-Clone.git
 cd Airbnb-Clone
 ```
 
-### 2. Install Dependencies
+### Install Dependencies
+
+If normal install hits a peer dependency conflict, use the legacy peer flag.
 
 ```bash
-npm install
+npm install --legacy-peer-deps
 ```
 
-### 3. Configure Environment Variables
+### Configure Environment
 
-Create a `.env` file in the root directory with the following:
+Create a `.env` file in the project root. Do not commit this file.
 
 ```env
+SECRET_KEY=your_session_secret
+ATLASDB_URL=your_mongodb_atlas_connection_string
+
 CLOUD_NAME=your_cloudinary_cloud_name
 CLOUD_API_KEY=your_cloudinary_api_key
 CLOUD_API_SECRET=your_cloudinary_api_secret
+
 GOOGLE_MAP_API_KEY=your_google_maps_api_key
-ATLASDB_URL=your_mongodb_atlas_connection_string
-SECRRET_KEY=your_session_secret_key
 ```
 
-> **Note:** Make sure your Google Maps API key has the **Maps JavaScript API** enabled in the [Google Cloud Console](https://console.cloud.google.com/apis/library).
+Notes:
 
-### 4. Seed the Database (Optional)
+- `SECRET_KEY` is required for sessions.
+- `ATLASDB_URL` is required to load real listings, users, and reviews.
+- If `ATLASDB_URL` is missing, the app still starts and shows a clear database-offline message instead of crashing.
+- Uploaded listing images require the Cloudinary variables.
+- Listing maps require `GOOGLE_MAP_API_KEY`.
 
-To populate the database with sample listings:
+### Run
+
+```bash
+npm start
+```
+
+Open:
+
+```text
+http://127.0.0.1:8080
+```
+
+### Seed Sample Data
+
+Optional:
 
 ```bash
 node init/index.js
 ```
 
-### 5. Start the Server
+## Main Routes
+
+| Route | Description |
+| --- | --- |
+| `/listings` | Browse listings |
+| `/listings?q=delhi` | Search listings by destination-style text |
+| `/listings/createNew` | Create listing form, login required |
+| `/listings/:id` | Listing detail page |
+| `/listings/:id/edit` | Edit listing, owner only |
+| `/profile` | Account dashboard, login required |
+| `/signup` | Signup page |
+| `/login` | Login page |
+| `/logout` | Logout |
+
+## Project Structure
+
+```text
+Airbnb-Clone/
+|-- app.js
+|-- cloudConfig.js
+|-- middleware.js
+|-- Schema.js
+|-- package.json
+|-- controllers/
+|   |-- listings.js
+|   |-- reviews.js
+|   `-- user.js
+|-- models/
+|   |-- listing.js
+|   |-- review.js
+|   `-- user.js
+|-- routes/
+|   |-- listing.js
+|   |-- review.js
+|   `-- user.js
+|-- utils/
+|   |-- database.js
+|   |-- geocoding.js
+|   |-- ExpressError.js
+|   `-- wrapAsync.js
+|-- views/
+|   |-- includes/
+|   |-- layouts/
+|   |-- listings/
+|   `-- users/
+|-- public/
+|   |-- css/
+|   `-- js/
+`-- init/
+    |-- data.js
+    `-- index.js
+```
+
+## Recent UI Updates
+
+- Rebuilt the profile page into a dashboard instead of plain username/email text.
+- Restyled the new-listing form to match the polished edit-form direction.
+- Converted the header search pill into a functional listings search form.
+- Added result counts, clear-search action, and empty states for search.
+- Added responsive fixes for desktop and mobile layouts.
+
+## Troubleshooting
+
+### App starts but listings are unavailable
+
+Check that `.env` contains `ATLASDB_URL` and that the MongoDB Atlas user/IP allowlist are configured.
+
+### `npm install` fails with a peer dependency conflict
+
+Use:
 
 ```bash
-# Using Node.js
-node app.js
-
-# Or using nodemon (for development)
-npx nodemon app.js
+npm install --legacy-peer-deps
 ```
 
-The app will be running at **http://localhost:8080**
+### Image upload fails
 
----
+Check `CLOUD_NAME`, `CLOUD_API_KEY`, and `CLOUD_API_SECRET`.
 
-## 📁 Project Structure
+### Map does not appear on listing pages
 
-```
-Airbnb-Clone/
-├── app.js                  # Main Express application
-├── cloudConfig.js          # Cloudinary configuration
-├── middleware.js            # Auth & validation middleware
-├── Schema.js               # Joi validation schemas
-├── .env                    # Environment variables (not committed)
-│
-├── models/
-│   ├── listing.js          # Listing Mongoose model
-│   ├── review.js           # Review Mongoose model
-│   └── user.js             # User model (with passport plugin)
-│
-├── routes/
-│   ├── listing.js          # Listing routes (CRUD)
-│   ├── review.js           # Review routes
-│   └── user.js             # Auth routes (signup/login/logout)
-│
-├── controllers/
-│   ├── listings.js         # Listing controller logic
-│   ├── reviews.js          # Review controller logic
-│   └── users.js            # Auth controller logic
-│
-├── utils/
-│   ├── ExpressError.js     # Custom error class
-│   ├── wrapAsync.js        # Async error wrapper
-│   └── geocoding.js        # Nominatim geocoding utility
-│
-├── views/
-│   ├── layouts/            # EJS layout templates
-│   ├── includes/           # Reusable partials (navbar, footer)
-│   ├── listings/           # Listing pages (index, show, edit, new)
-│   └── users/              # Auth pages (login, signup)
-│
-├── public/
-│   ├── css/                # Stylesheets
-│   └── js/                 # Client-side JavaScript
-│
-└── init/
-    ├── data.js             # Sample listing data
-    └── index.js            # Database seed script
-```
+Check `GOOGLE_MAP_API_KEY` and confirm Maps JavaScript API is enabled.
 
----
+## License
 
-## 🔑 API Keys Setup Guide
+ISC
 
-### Google Maps
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select an existing one
-3. Navigate to **APIs & Services → Library**
-4. Enable **Maps JavaScript API**
-5. Go to **APIs & Services → Credentials**
-6. Create an API key and add it to your `.env` file
-
-### Cloudinary
-1. Sign up at [cloudinary.com](https://cloudinary.com/)
-2. Find your **Cloud Name**, **API Key**, and **API Secret** on the dashboard
-3. Add them to your `.env` file
-
-### MongoDB Atlas
-1. Create a free cluster at [mongodb.com/atlas](https://www.mongodb.com/atlas)
-2. Create a database user and whitelist your IP
-3. Get the connection string and add it to your `.env` file as `ATLASDB_URL`
-
----
-
-## 📸 Screenshots
-
-> Visit the live app or run locally to see the full UI in action!
-
----
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the ISC License.
-
----
-
-<p align="center">Made with ❤️ by <a href="https://github.com/sunnydev07">sunnydev07</a></p>
