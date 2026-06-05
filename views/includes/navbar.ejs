@@ -53,6 +53,14 @@
             <span class="menu-popup-user">Hi, <%= currUser.username %></span>
             <a class="menu-popup-item" href="/profile" role="menuitem">Profile</a>
             <a class="menu-popup-item" href="/listings?owner=me" role="menuitem">My Listings</a>
+            <a class="menu-popup-item" href="/bookings/trips" role="menuitem">My Trips</a>
+            <a class="menu-popup-item" href="/bookings/hosting" role="menuitem">Hosting</a>
+            <a class="menu-popup-item" href="/messages" role="menuitem">
+              Messages
+              <% if (locals.unreadMessagesCount && locals.unreadMessagesCount > 0) { %>
+                <span class="badge bg-danger ms-1" style="font-size: 0.75rem; border-radius: 50%; padding: 0.25em 0.5em;"><%= unreadMessagesCount %></span>
+              <% } %>
+            </a>
             <a class="menu-popup-item" href="/logout" role="menuitem">Logout</a>
           <% } %>
         </div>

@@ -5,123 +5,224 @@
     : 'New member';
 %>
 
-<section class="profile-dashboard">
-  <div class="profile-hero-panel">
-    <div class="profile-identity">
-      <div class="profile-avatar" aria-hidden="true"><%= profileInitial %></div>
+<section class="profile-dashboard container my-5">
+  <!-- Profile Hero Section -->
+  <div class="profile-hero-panel d-flex flex-column flex-md-row justify-content-between align-items-md-center p-4 bg-light rounded-4 mb-4" style="border: 1px solid var(--border);">
+    <div class="profile-identity d-flex align-items-center gap-3">
+      <div class="profile-avatar rounded-circle bg-dark text-white d-flex align-items-center justify-content-center fw-bold" style="width: 70px; height: 70px; font-size: 2rem;" aria-hidden="true"><%= profileInitial %></div>
       <div>
-        <p class="profile-eyebrow">Your account</p>
-        <h2><%= currUser.username %></h2>
-        <p class="profile-email"><i class="fa-solid fa-envelope"></i> <%= currUser.email %></p>
+        <p class="profile-eyebrow text-secondary mb-0 small text-uppercase fw-bold letter-spacing-1">Your account</p>
+        <h2 class="fw-bold mb-0">@<%= currUser.username %></h2>
+        <p class="profile-email text-muted mb-0 small"><i class="fa-solid fa-envelope me-1"></i> <%= currUser.email %></p>
       </div>
     </div>
 
-    <div class="profile-hero-actions">
-      <a href="/listings/createNew" class="profile-primary-action">
-        <i class="fa-solid fa-plus"></i>
-        Create Listing
+    <div class="profile-hero-actions d-flex gap-2 mt-3 mt-md-0">
+      <a href="/listings/createNew" class="btn btn-dark px-3 py-2" style="border-radius: 0.5rem; font-weight: 600;">
+        <i class="fa-solid fa-plus me-1"></i> Create Listing
       </a>
-      <a href="/listings?owner=me" class="profile-secondary-action">
-        <i class="fa-solid fa-house-user"></i>
-        My Listings
+      <a href="/listings?owner=me" class="btn btn-outline-dark px-3 py-2" style="border-radius: 0.5rem; font-weight: 600;">
+        <i class="fa-solid fa-house-user me-1"></i> My Listings
       </a>
     </div>
   </div>
 
-  <div class="profile-stats-grid" aria-label="Profile statistics">
-    <article class="profile-stat-card">
-      <span class="profile-stat-icon"><i class="fa-solid fa-house"></i></span>
-      <div>
-        <strong><%= profileStats.listingCount %></strong>
-        <span>Active <%= profileStats.listingCount === 1 ? 'listing' : 'listings' %></span>
-      </div>
-    </article>
-
-    <article class="profile-stat-card">
-      <span class="profile-stat-icon"><i class="fa-solid fa-star"></i></span>
-      <div>
-        <strong><%= profileStats.reviewCount %></strong>
-        <span>Total <%= profileStats.reviewCount === 1 ? 'review' : 'reviews' %></span>
-      </div>
-    </article>
-
-    <article class="profile-stat-card">
-      <span class="profile-stat-icon"><i class="fa-solid fa-indian-rupee-sign"></i></span>
-      <div>
-        <strong><%= profileStats.averagePrice ? profileStats.averagePrice.toLocaleString('en-IN') : '0' %></strong>
-        <span>Average nightly price</span>
-      </div>
-    </article>
-
-    <article class="profile-stat-card">
-      <span class="profile-stat-icon"><i class="fa-solid fa-calendar-check"></i></span>
-      <div>
-        <strong><%= memberSinceText %></strong>
-        <span>Member since</span>
-      </div>
-    </article>
-  </div>
-
-  <div class="profile-content-grid">
-    <section class="profile-panel">
-      <div class="profile-section-heading">
-        <div>
-          <p class="profile-eyebrow">Hosting snapshot</p>
-          <h3>Recent listings</h3>
+  <!-- Performance Stats Cards Grid -->
+  <div class="row g-3 mb-4">
+    <!-- Listings Count -->
+    <div class="col-6 col-md-3">
+      <div class="card p-3 h-100 shadow-sm border" style="border-radius: var(--radius);">
+        <div class="d-flex align-items-center gap-3">
+          <span class="fs-4 text-secondary bg-light rounded-circle p-2 d-inline-flex align-items-center justify-content-center" style="width: 45px; height: 45px;"><i class="fa-solid fa-house"></i></span>
+          <div>
+            <h4 class="fw-bold mb-0"><%= profileStats.listingCount %></h4>
+            <span class="text-secondary small">Active listings</span>
+          </div>
         </div>
-        <% if (ownedListings.length > 3) { %>
-          <a href="/listings?owner=me">View all</a>
+      </div>
+    </div>
+
+    <!-- Confirmed Bookings -->
+    <div class="col-6 col-md-3">
+      <div class="card p-3 h-100 shadow-sm border" style="border-radius: var(--radius);">
+        <div class="d-flex align-items-center gap-3">
+          <span class="fs-4 text-success bg-light rounded-circle p-2 d-inline-flex align-items-center justify-content-center" style="width: 45px; height: 45px;"><i class="fa-solid fa-calendar-check"></i></span>
+          <div>
+            <h4 class="fw-bold mb-0"><%= profileStats.bookingCount %></h4>
+            <span class="text-secondary small">Bookings received</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Revenue -->
+    <div class="col-6 col-md-3">
+      <div class="card p-3 h-100 shadow-sm border" style="border-radius: var(--radius);">
+        <div class="d-flex align-items-center gap-3">
+          <span class="fs-4 text-danger bg-light rounded-circle p-2 d-inline-flex align-items-center justify-content-center" style="width: 45px; height: 45px;"><i class="fa-solid fa-indian-rupee-sign"></i></span>
+          <div>
+            <h4 class="fw-bold mb-0">&#8377;<%= profileStats.totalRevenue.toLocaleString('en-IN') %></h4>
+            <span class="text-secondary small">Total revenue</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Count -->
+    <div class="col-6 col-md-3">
+      <div class="card p-3 h-100 shadow-sm border" style="border-radius: var(--radius);">
+        <div class="d-flex align-items-center gap-3">
+          <span class="fs-4 text-primary bg-light rounded-circle p-2 d-inline-flex align-items-center justify-content-center" style="width: 45px; height: 45px;"><i class="fa-solid fa-eye"></i></span>
+          <div>
+            <h4 class="fw-bold mb-0"><%= profileStats.totalViews %></h4>
+            <span class="text-secondary small">Listing views</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Main Content Area -->
+    <div class="col-lg-8">
+      <!-- Recent Listings Snapshot -->
+      <section class="card border p-4 mb-4 shadow-sm" style="border-radius: var(--radius);">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div>
+            <p class="profile-eyebrow text-secondary small mb-0 text-uppercase fw-bold">Hosting snapshot</p>
+            <h4 class="fw-bold mb-0">Recent Listings</h4>
+          </div>
+          <% if (ownedListings.length > 3) { %>
+            <a href="/listings?owner=me" class="text-danger fw-semibold text-decoration-none">View all</a>
+          <% } %>
+        </div>
+
+        <% if (recentListings.length > 0) { %>
+          <div class="d-flex flex-column gap-3">
+            <% for (let listing of recentListings) { %>
+              <a href="/listings/<%= listing._id %>" class="d-flex align-items-center justify-content-between text-decoration-none border rounded-3 p-2 hover-bg-light transition-all" style="color: inherit;">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="rounded overflow-hidden" style="width: 60px; height: 60px;">
+                    <% if (listing.image && listing.image.url) { %>
+                      <img src="<%= listing.image.url %>" alt="<%= listing.title %>" class="w-100 h-100 object-fit-cover" style="object-fit: cover;">
+                    <% } else { %>
+                      <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted"><i class="fa-solid fa-image"></i></div>
+                    <% } %>
+                  </div>
+                  <div>
+                    <strong class="text-dark d-block text-truncate" style="max-width: 250px;"><%= listing.title %></strong>
+                    <span class="text-secondary small"><i class="fa-solid fa-location-dot me-1"></i><%= listing.location %>, <%= listing.country %></span>
+                  </div>
+                </div>
+                <div class="fw-bold text-dark pe-2">
+                  &#8377;<%= listing.price != null ? Number(listing.price).toLocaleString('en-IN') : 'N/A' %>
+                </div>
+              </a>
+            <% } %>
+          </div>
+        <% else { %>
+          <div class="text-center py-4 text-muted">
+            <i class="fa-solid fa-door-open mb-2" style="font-size: 2.5rem;"></i>
+            <h6>No listings yet</h6>
+            <a href="/listings/createNew" class="text-danger fw-semibold text-decoration-none small">Start hosting today</a>
+          </div>
+        <% } %>
+      </section>
+
+      <!-- Rating Distribution CSS Bar Chart -->
+      <section class="card border p-4 shadow-sm" style="border-radius: var(--radius);">
+        <h5 class="fw-bold mb-4"><i class="fa-solid fa-chart-simple me-2 text-danger"></i>Rating Distribution</h5>
+        <% 
+            const counts = Object.values(profileStats.ratingDistribution);
+            const totalRatingCount = counts.reduce((a, b) => a + b, 0);
+            const maxVal = Math.max(...counts, 1);
+        %>
+        
+        <% for (let star = 5; star >= 1; star--) { %>
+          <% 
+              const count = profileStats.ratingDistribution[star] || 0;
+              const percent = totalRatingCount > 0 ? Math.round((count / totalRatingCount) * 100) : 0;
+          %>
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <span class="small fw-semibold text-secondary" style="width: 60px;"><%= star %> Stars</span>
+            <div class="progress flex-grow-1" style="height: 12px; border-radius: 6px; background-color: var(--border);">
+              <div class="progress-bar" role="progressbar" style="width: <%= percent %>%; background-color: var(--red); border-radius: 6px;" aria-valuenow="<%= percent %>" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <span class="small font-monospace text-secondary" style="width: 40px; text-align: right;"><%= count %> (<%= percent %>%)</span>
+          </div>
+        <% } %>
+      </section>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="col-lg-4">
+      <!-- Quick Links Section -->
+      <div class="card border p-4 mb-4 shadow-sm" style="border-radius: var(--radius);">
+        <h5 class="fw-bold mb-3"><i class="fa-solid fa-link me-2 text-danger"></i>Quick Links</h5>
+        <div class="d-flex flex-column gap-2">
+          <a href="/bookings/trips" class="btn btn-outline-dark text-start py-2.5 px-3 d-flex align-items-center justify-content-between" style="border-radius: 0.5rem; font-weight: 600;">
+            <span><i class="fa-solid fa-suitcase me-2 text-secondary"></i>My Trips</span>
+            <i class="fa-solid fa-chevron-right text-muted small"></i>
+          </a>
+          <a href="/bookings/hosting" class="btn btn-outline-dark text-start py-2.5 px-3 d-flex align-items-center justify-content-between" style="border-radius: 0.5rem; font-weight: 600;">
+            <span><i class="fa-solid fa-house-laptop me-2 text-secondary"></i>Hosting Dashboard</span>
+            <i class="fa-solid fa-chevron-right text-muted small"></i>
+          </a>
+          <a href="/messages" class="btn btn-outline-dark text-start py-2.5 px-3 d-flex align-items-center justify-content-between" style="border-radius: 0.5rem; font-weight: 600;">
+            <span>
+              <i class="fa-solid fa-comments me-2 text-secondary"></i>Messages
+              <% if (locals.unreadMessagesCount && locals.unreadMessagesCount > 0) { %>
+                <span class="badge bg-danger ms-2"><%= unreadMessagesCount %></span>
+              <% } %>
+            </span>
+            <i class="fa-solid fa-chevron-right text-muted small"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Recent Reviews Feed -->
+      <div class="card border p-4 mb-4 shadow-sm" style="border-radius: var(--radius);">
+        <h5 class="fw-bold mb-3"><i class="fa-solid fa-comments me-2 text-danger"></i>Recent Reviews</h5>
+        <% if (profileStats.recentReviews && profileStats.recentReviews.length > 0) { %>
+          <div class="d-flex flex-column gap-3">
+            <% profileStats.recentReviews.forEach(review => { %>
+              <div class="border-bottom pb-2">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <span class="fw-bold text-dark small">@<%= review.author.username %></span>
+                  <small class="text-muted" style="font-size: 0.75rem;"><%= new Date(review.createdAt).toLocaleDateString('en-IN') %></small>
+                </div>
+                <div class="text-muted" style="font-size: 0.75rem; margin-bottom: 2px;">
+                  Listing: <a href="/listings/<%= review.listingId %>" class="text-danger fw-semibold text-decoration-none"><%= review.listingTitle %></a>
+                </div>
+                <p class="starability-result mb-1" data-rating="<%= review.rating %>" style="transform: scale(0.45); transform-origin: left; margin: 0;"></p>
+                <p class="mb-0 text-secondary small" style="font-style: italic; line-height: 1.3;">"<%= review.comment %>"</p>
+              </div>
+            <% }) %>
+          </div>
+        <% } else { %>
+          <p class="text-secondary small mb-0">No reviews yet on your listings.</p>
         <% } %>
       </div>
 
-      <% if (recentListings.length > 0) { %>
-        <div class="profile-listing-stack">
-          <% for (let listing of recentListings) { %>
-            <a href="/listings/<%= listing._id %>" class="profile-listing-row">
-              <div class="profile-listing-thumb">
-                <% if (listing.image && listing.image.url) { %>
-                  <img src="<%= listing.image.url %>" alt="<%= listing.title %>">
-                <% } else { %>
-                  <i class="fa-solid fa-image"></i>
-                <% } %>
-              </div>
-              <div class="profile-listing-copy">
-                <strong><%= listing.title %></strong>
-                <span><%= listing.location %>, <%= listing.country %></span>
-              </div>
-              <div class="profile-listing-price">
-                &#8377;<%= listing.price != null ? Number(listing.price).toLocaleString('en-IN') : 'N/A' %>
-              </div>
-            </a>
-          <% } %>
-        </div>
-      <% } else { %>
-        <div class="profile-empty-panel">
-          <i class="fa-solid fa-door-open"></i>
-          <h4>No listings yet</h4>
-          <p>Your hosted stays will appear here once you create your first listing.</p>
-          <a href="/listings/createNew" class="profile-primary-action">Start hosting</a>
-        </div>
-      <% } %>
-    </section>
-
-    <aside class="profile-panel profile-account-panel">
-      <p class="profile-eyebrow">Account details</p>
-      <h3>Ready to host</h3>
-      <div class="profile-detail-list">
-        <div>
-          <span>Username</span>
-          <strong><%= currUser.username %></strong>
-        </div>
-        <div>
-          <span>Email</span>
-          <strong><%= currUser.email %></strong>
-        </div>
-        <div>
-          <span>Profile status</span>
-          <strong>Verified session</strong>
+      <!-- Account Info Snap Card -->
+      <div class="card border p-4 shadow-sm" style="border-radius: var(--radius);">
+        <p class="profile-eyebrow text-secondary small mb-1 text-uppercase fw-bold">Account details</p>
+        <h5 class="fw-bold mb-3">Hosting Status</h5>
+        <div class="d-flex flex-column gap-2" style="font-size: 0.9rem;">
+          <div class="d-flex justify-content-between border-bottom pb-1">
+            <span class="text-secondary">Username:</span>
+            <strong class="text-dark"><%= currUser.username %></strong>
+          </div>
+          <div class="d-flex justify-content-between border-bottom pb-1">
+            <span class="text-secondary">Email:</span>
+            <strong class="text-dark text-truncate" style="max-width: 150px;"><%= currUser.email %></strong>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="text-secondary">Member since:</span>
+            <strong class="text-dark"><%= memberSinceText %></strong>
+          </div>
         </div>
       </div>
-    </aside>
+    </div>
   </div>
 </section>

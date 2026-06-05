@@ -10,7 +10,8 @@ const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params:{
         folder:'AirbnbClone',
-        allowed_formats:['jpeg', 'jpg', 'png']
+        allowed_formats:['jpeg', 'jpg', 'png', 'webp'],
+        transformation: [{ width: 1200, height: 800, crop: 'limit', quality: 'auto' }]
     },
 });
 module.exports = {cloudinary, storage};

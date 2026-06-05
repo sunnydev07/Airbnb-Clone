@@ -1,0 +1,58 @@
+<div class="login-page py-5">
+  <div class="container py-5">
+    <div class="row g-4 align-items-center justify-content-center">
+      <div class="col-lg-6">
+        <p class="text-uppercase fw-bold text-accent mb-2">Security Update</p>
+        <h1 class="fw-bold mb-3 display-5">Update your account credentials.</h1>
+        <p class="text-secondary mb-4">Please choose a strong password that you do not use on other platforms to secure your account.</p>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="card shadow-lg border-0 card-dark">
+          <div class="card-body p-4 p-md-5">
+            <div class="mb-3">
+              <p class="text-uppercase fw-bold text-accent mb-1">Reset Password</p>
+              <h4 class="fw-bold mb-0 text-light">Create New Password</h4>
+            </div>
+
+            <form action="/reset/<%= token %>" method="POST" class="needs-validation" novalidate>
+              <div class="row g-3">
+                <div class="col-12">
+                  <label class="form-label fw-semibold text-light">New Password</label>
+                  <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-ink text-secondary"><i class="fas fa-lock"></i></span>
+                    <input type="password" name="password" id="password" class="form-control input-dark" placeholder="Enter new password" minlength="8" required>
+                    <div class="invalid-feedback">Please enter a password with at least 8 characters.</div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label fw-semibold text-light">Confirm Password</label>
+                  <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-ink text-secondary"><i class="fas fa-lock text-secondary"></i></span>
+                    <input type="password" name="confirmPassword" id="confirmPassword" class="form-control input-dark" placeholder="Confirm new password" minlength="8" required>
+                    <div class="invalid-feedback">Please confirm your new password.</div>
+                  </div>
+                </div>
+              </div>
+
+              <button class="btn btn-accent btn-lg w-100 mt-4" type="submit">Reset Password</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .login-page { background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08), transparent 30%), radial-gradient(circle at 80% 0%, rgba(255,255,255,0.06), transparent 30%), #0b1220; color: #e5e7eb; min-height: calc(var(--vh, 1vh) * 100); }
+  .text-accent { color: #ff6b81; }
+  .text-secondary { color: #9ca3af !important; }
+  .card-dark { background: #111827; }
+  .input-dark { background: #0f172a; border: 1px solid #1f2937; color: #e5e7eb; }
+  .input-dark::placeholder { color: #6b7280; }
+  .input-dark:focus { background: #111827; border-color: #ff6b81; color: #fff; box-shadow: 0 0 0 0.2rem rgba(255,107,129,0.15); }
+  .bg-ink { background: #0f172a; border: 1px solid #1f2937; }
+  .btn-accent { background: linear-gradient(135deg, #ff6b81 0%, #ff385c 100%); border: none; color: #fff; box-shadow: 0 12px 30px rgba(255,104,128,0.25); }
+</style>

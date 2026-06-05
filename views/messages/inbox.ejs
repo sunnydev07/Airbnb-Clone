@@ -1,0 +1,69 @@
+<div class="container my-5">
+    <div class="mb-4">
+        <h1 class="fw-bold" style="letter-spacing: -0.5px;">Messages</h1>
+        <p class="text-secondary mb-0">Stay in touch with hosts and guests</p>
+    </div>
+
+    <% if (conversations.length === 0) { %>
+        <div class="text-center py-5 shadcn-card my-5" style="border-radius: var(--radius); border: 1px solid var(--border);">
+            <div class="mb-3">
+                <i class="fa-regular fa-comments text-muted" style="font-size: 3.5rem;"></i>
+            </div>
+            <h3 class="fw-bold">No messages yet</h3>
+            <p class="text-secondary max-w-md mx-auto mb-4" style="max-width: 400px;">
+                You don't have any active conversations. Start a conversation with a host from their listing page!
+            </p>
+            <a href="/listings" class="btn btn-dark px-4 py-2" style="border-radius: 0.5rem; font-weight: 600;">
+                Find places to stay
+            </a>
+        </div>
+    <% } else { %>
+        <div class="row">
+            <div class="col-md-10 col-lg-8 mx-auto">
+                <div class="shadcn-card" style="border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; background: #fff; box-shadow: var(--shadow-sm);">
+                    <div class="list-group list-group-flush">
+                        <% conversations.forEach(conv => { %>
+                            <% 
+                                const otherUser = conv.participants.find(p => !p._id.equals(currUser._id)) || { username: 'Unknown User' };
+                                const lastMsg = conv.messages[conv.messages.length - 1];
+                                const unreadCount = conv.messages.filter(msg => !msg.sender.equals(currUser._id) && !msg.read).length;
+                            %>
+                            <a href="/messages/<%= conv._id %>" class="list-group-item list-group-item-action p-4 border-bottom d-flex align-items-center justify-content-between gap-3" style="transition: background-color 0.2s ease;">
+                                <div class="d-flex align-items-center gap-3 w-100 overflow-hidden">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center bg-light text-dark fw-bold" style="width: 50px; height: 50px; flex-shrink: 0; border: 1px solid var(--border);">
+                                        <%= otherUser.username.charAt(0).toUpperCase() %>
+                                    </div>
+                                    <div class="w-100 overflow-hidden">
+                                        <div class="d-flex align-items-center justify-content-between mb-1">
+                                            <h6 class="mb-0 fw-bold text-dark text-truncate">@<%= otherUser.username %></h6>
+                                            <span class="text-secondary small font-monospace">
+                                                <%= conv.updatedAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) %>
+                                            </span>
+                                        </div>
+                                        <% if (conv.listing) { %>
+                                            <div class="text-secondary small mb-1 text-truncate fw-semibold">
+                                                <i class="fa-solid fa-house-chimney me-1"></i><%= conv.listing.title %>
+                                            </div>
+                                        <% } %>
+                                        <p class="text-secondary mb-0 text-truncate font-small" style="font-size: 0.9rem; <%= unreadCount > 0 ? 'font-weight: 600; color: var(--text-primary) !important;' : '' %>">
+                                            <% if (lastMsg) { %>
+                                                <%= lastMsg.sender.equals(currUser._id) ? 'You: ' : '' %><%= lastMsg.content %>
+                                            <% } else { %>
+                                                No messages yet.
+                                            <% } %>
+                                        </p>
+                                    </div>
+                                </div>
+                                <% if (unreadCount > 0) { %>
+                                    <span class="badge bg-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 22px; height: 22px; font-size: 0.75rem; flex-shrink: 0;">
+                                        <%= unreadCount %>
+                                    </span>
+                                <% } %>
+                            </a>
+                        <% }) %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } %>
+</div>

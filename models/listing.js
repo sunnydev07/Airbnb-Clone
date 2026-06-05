@@ -39,6 +39,10 @@ const listingSchema = new Schema({
     owner:{
         type:Schema.Types.ObjectId,
         ref:"User",
+    },
+    viewCount: {
+        type: Number,
+        default: 0
     }
 });
 listingSchema.post("findOneAndDelete", async(listing)=>{   // it's a middleware that call when we use findByIdAndDelete method

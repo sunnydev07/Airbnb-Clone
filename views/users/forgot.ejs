@@ -1,0 +1,52 @@
+<div class="login-page py-5">
+  <div class="container py-5">
+    <div class="row g-4 align-items-center justify-content-center">
+      <div class="col-lg-6">
+        <p class="text-uppercase fw-bold text-accent mb-2">Password Recovery</p>
+        <h1 class="fw-bold mb-3 display-5">Forgot your password? No worries.</h1>
+        <p class="text-secondary mb-4">Provide the email address linked to your account, and we will send you a password reset link valid for 1 hour.</p>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="card shadow-lg border-0 card-dark">
+          <div class="card-body p-4 p-md-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div>
+                <p class="text-uppercase fw-bold text-accent mb-1">Forgot password</p>
+                <h4 class="fw-bold mb-0 text-light">Recover Account</h4>
+              </div>
+              <div class="text-secondary small"><a href="/login" class="fw-semibold text-accent">Back to Login</a></div>
+            </div>
+
+            <form action="/forgot" method="POST" class="needs-validation" novalidate>
+              <div class="row g-3">
+                <div class="col-12">
+                  <label class="form-label fw-semibold text-light">Email Address</label>
+                  <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-ink text-secondary"><i class="fas fa-envelope"></i></span>
+                    <input type="email" name="email" class="form-control input-dark" placeholder="your-email@example.com" required autocomplete="off">
+                    <div class="invalid-feedback">Please enter a valid email address.</div>
+                  </div>
+                </div>
+              </div>
+
+              <button class="btn btn-accent btn-lg w-100 mt-4" type="submit">Send Reset Link</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .login-page { background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08), transparent 30%), radial-gradient(circle at 80% 0%, rgba(255,255,255,0.06), transparent 30%), #0b1220; color: #e5e7eb; min-height: calc(var(--vh, 1vh) * 100); }
+  .text-accent { color: #ff6b81; }
+  .text-secondary { color: #9ca3af !important; }
+  .card-dark { background: #111827; }
+  .input-dark { background: #0f172a; border: 1px solid #1f2937; color: #e5e7eb; }
+  .input-dark::placeholder { color: #6b7280; }
+  .input-dark:focus { background: #111827; border-color: #ff6b81; color: #fff; box-shadow: 0 0 0 0.2rem rgba(255,107,129,0.15); }
+  .bg-ink { background: #0f172a; border: 1px solid #1f2937; }
+  .btn-accent { background: linear-gradient(135deg, #ff6b81 0%, #ff385c 100%); border: none; color: #fff; box-shadow: 0 12px 30px rgba(255,104,128,0.25); }
+</style>

@@ -27,4 +27,12 @@ router.route('/login').get(userController.renderLoginForm)
 router.get('/logout', userController.logout);
 router.get('/profile', isLoggedIn, userController.renderProfile);
 
+router.route('/forgot')
+  .get(userController.renderForgotForm)
+  .post(wrapAsync(userController.sendResetEmail));
+
+router.route('/reset/:token')
+  .get(wrapAsync(userController.renderResetForm))
+  .post(wrapAsync(userController.resetPassword));
+
 module.exports = router;

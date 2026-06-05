@@ -110,7 +110,7 @@ module.exports.showListing = async (req, res) => {
         return res.redirect('/listings');
     }
     let { id } = req.params;
-    const listing = await Listing.findById(id)
+    const listing = await Listing.findByIdAndUpdate(id, { $inc: { viewCount: 1 } }, { new: true })
         .populate({path:"reviews", populate:{path:"author"}})
         .populate("owner");
     if(!listing){
@@ -184,9 +184,9 @@ module.exports.updateListing = async (req, res) => {
     }
 
     if(typeof req.file !== "undefined"){
-    let url = req.file.path;
-    let filename = req.file.filename;
-    lisitng.image = {url, filename};
+        let url = req.file.path;
+        let filename = req.file.filename;
+        lisitng.image = {url, filename};
     }
     await lisitng.save();
     req.flash('success', 'listing updated successfully!');
@@ -201,4 +201,10 @@ module.exports.deleteListing = async (req, res) => {
     await Listing.findByIdAndDelete(id);
     req.flash('success', "listing deleted successfully!");
     res.redirect('/listings');
+};
+
+module.exports.renderMapView = async (req, res) => {
+    const allListings = await Listing.find({});
+    allListings.forEach(normalizeImageUrl);
+    res.render('listings/map', { allListings });
 };

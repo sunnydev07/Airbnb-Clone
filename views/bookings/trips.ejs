@@ -1,0 +1,91 @@
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="fw-bold" style="letter-spacing: -0.5px;">My Trips</h1>
+            <p class="text-secondary mb-0">Manage your reservations and upcoming journeys</p>
+        </div>
+        <a href="/listings" class="btn btn-outline-dark" style="border-radius: 0.5rem; font-weight: 600;">
+            <i class="fa-solid fa-magnifying-glass me-2"></i>Explore more
+        </a>
+    </div>
+
+    <% if (bookings.length === 0) { %>
+        <div class="text-center py-5 shadcn-card my-5" style="border-radius: var(--radius); border: 1px solid var(--border);">
+            <div class="mb-3">
+                <i class="fa-solid fa-plane-departure text-muted" style="font-size: 3.5rem;"></i>
+            </div>
+            <h3 class="fw-bold">No trips booked yet!</h3>
+            <p class="text-secondary max-w-md mx-auto mb-4" style="max-width: 400px;">
+                Time to dust off your bags and start planning your next adventure.
+            </p>
+            <a href="/listings" class="btn-reserve text-decoration-none px-4 py-2 d-inline-block">
+                Start Exploring
+            </a>
+        </div>
+    <% } else { %>
+        <div class="row g-4">
+            <% bookings.forEach(booking => { %>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card h-100 border-0" style="border-radius: var(--radius); box-shadow: var(--shadow-sm); overflow: hidden; background: #fff; border: 1px solid var(--border) !important;">
+                        <div style="position: relative; height: 200px; overflow: hidden;">
+                            <img src="<%= booking.listing.image.url %>" class="w-100 h-100 object-fit-cover" style="object-fit: cover;" alt="<%= booking.listing.title %>">
+                            <span class="badge position-absolute top-3 end-3 px-3 py-2" style="top: 15px; right: 15px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; background-color: <%= booking.status === 'confirmed' ? '#22c55e' : (booking.status === 'cancelled' ? '#ef4444' : '#f59e0b') %>; color: white;">
+                                <%= booking.status.toUpperCase() %>
+                            </span>
+                        </div>
+                        <div class="card-body p-4 d-flex flex-column justify-content-between">
+                            <div>
+                                <h5 class="card-title fw-bold text-truncate mb-1">
+                                    <a href="/listings/<%= booking.listing._id %>" class="text-decoration-none text-dark hover-opacity">
+                                        <%= booking.listing.title %>
+                                    </a>
+                                </h5>
+                                <p class="text-secondary small mb-3">
+                                    <i class="fa-solid fa-location-dot me-1"></i><%= booking.listing.location %>, <%= booking.listing.country %>
+                                </p>
+
+                                <div class="p-3 bg-light rounded-3 mb-3" style="font-size: 0.9rem;">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-secondary"><i class="fa-regular fa-calendar me-2"></i>Check-in:</span>
+                                        <strong class="text-dark"><%= booking.checkIn.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-secondary"><i class="fa-regular fa-calendar-check me-2"></i>Check-out:</span>
+                                        <strong class="text-dark"><%= booking.checkOut.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-secondary"><i class="fa-solid fa-users me-2"></i>Guests:</span>
+                                        <strong class="text-dark"><%= booking.guests %> <%= booking.guests === 1 ? 'guest' : 'guests' %></strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center mb-3 pt-2 border-top">
+                                    <span class="fw-semibold text-secondary">Total Price</span>
+                                    <span class="fs-5 fw-bold text-dark">&#8377;<%= booking.totalPrice.toLocaleString('en-IN') %></span>
+                                </div>
+
+                                <% if (booking.status !== 'cancelled' && new Date(booking.checkIn) > new Date()) { %>
+                                    <form action="/bookings/<%= booking._id %>/cancel" method="POST" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                                        <button type="submit" class="btn btn-outline-danger w-100" style="border-radius: 0.5rem; font-weight: 600;">
+                                            Cancel Reservation
+                                        </button>
+                                    </form>
+                                <% } else if (booking.status === 'cancelled') { %>
+                                    <button class="btn btn-outline-secondary w-100" disabled style="border-radius: 0.5rem; font-weight: 600;">
+                                        Cancelled
+                                    </button>
+                                <% } else { %>
+                                    <button class="btn btn-secondary w-100" disabled style="border-radius: 0.5rem; font-weight: 600;">
+                                        Completed
+                                    </button>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    <% } %>
+</div>

@@ -1,0 +1,115 @@
+<div class="map-view-page">
+    <div id="full-map"></div>
+    <a href="/listings" class="btn btn-dark btn-list-toggle shadow-lg">
+        Show list <i class="fa-solid fa-list ms-2"></i>
+    </a>
+</div>
+
+<style>
+    .map-view-page {
+        position: relative;
+        width: 100%;
+        height: calc(100vh - 100px); /* minus navbar height */
+        margin: 0;
+        padding: 0;
+    }
+    #full-map {
+        width: 100%;
+        height: 100%;
+    }
+    .btn-list-toggle {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999;
+        border-radius: 24px;
+        padding: 12px 20px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.2) !important;
+        background-color: #222 !important;
+        border-color: #222 !important;
+    }
+    .btn-list-toggle:hover {
+        background-color: #000 !important;
+        transform: translateX(-50%) scale(1.04);
+        transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+    /* Override bootstrap container padding for this page */
+    .container {
+        max-width: 100% !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+</style>
+
+<script>
+    function initFullMap() {
+        const listings = <%- JSON.stringify(allListings) %>;
+        
+        // Find a center coordinates (or default to Delhi/India center)
+        let center = { lat: 20.5937, lng: 78.9629 }; // Center of India
+        
+        const validCoordsListings = listings.filter(l => l.coordinates && l.coordinates.latitude != null && l.coordinates.longitude != null);
+        
+        if (validCoordsListings.length > 0) {
+            // Find average coords to center the map
+            let sumLat = 0, sumLng = 0;
+            validCoordsListings.forEach(l => {
+                sumLat += l.coordinates.latitude;
+                sumLng += l.coordinates.longitude;
+            });
+            center = { lat: sumLat / validCoordsListings.length, lng: sumLng / validCoordsListings.length };
+        }
+
+        const map = new google.maps.Map(document.getElementById('full-map'), {
+            zoom: validCoordsListings.length > 0 ? 5 : 4,
+            center: center,
+            mapTypeId: 'roadmap',
+            disableDefaultUI: false,
+            styles: [
+                { featureType: 'poi', stylers: [{ visibility: 'off' }] }
+            ]
+        });
+
+        const bounds = new google.maps.LatLngBounds();
+
+        validCoordsListings.forEach(listing => {
+            const pos = { lat: listing.coordinates.latitude, lng: listing.coordinates.longitude };
+            
+            const marker = new google.maps.Marker({
+                position: pos,
+                map: map,
+                title: listing.title,
+                icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+                animation: google.maps.Animation.DROP
+            });
+
+            bounds.extend(pos);
+
+            const contentString = `
+                <div style="font-family: 'Plus Jakarta Sans', sans-serif; max-width: 200px; padding: 5px;">
+                    <img src="${listing.image.url}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;">
+                    <h6 style="font-weight: 700; margin-bottom: 4px; font-size: 0.95rem; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${listing.title}</h6>
+                    <p style="margin-bottom: 8px; font-size: 0.85rem; color: #666; font-weight: 600;">&#8377;${(listing.price || 0).toLocaleString('en-IN')} / night</p>
+                    <a href="/listings/${listing._id}" class="btn btn-sm btn-danger text-white w-100" style="font-weight: 600; border-radius: 6px; font-size: 0.8rem; background-color: #ff385c; border: none;">View Stay</a>
+                </div>
+            `;
+
+            const infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+
+            marker.addListener('click', () => {
+                infowindow.open(map, marker);
+            });
+        });
+
+        if (validCoordsListings.length > 1) {
+            map.fitBounds(bounds);
+        }
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.GOOGLE_MAP_API_KEY %>&callback=initFullMap" async defer></script>

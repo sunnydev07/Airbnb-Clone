@@ -5,6 +5,8 @@ const wrapAsync = require('../utils/wrapAsync.js');
 const { listingSchema } = require('../Schema.js');
 const { isLoggedIn, isOwner } = require('../middleware.js');
 const lisitngController = require('../controllers/listings.js');
+const bookingsController = require('../controllers/bookings.js');
+const messagesController = require('../controllers/messages.js');
 const multer = require('multer');
 const { storage } = require('../cloudConfig.js');
 
@@ -24,8 +26,17 @@ router.get('/', wrapAsync(lisitngController.index));
 // new route
 router.get('/createNew', isLoggedIn, wrapAsync(lisitngController.renderNewForm));
 
+// Map view route (MUST be defined before /:id routes)
+router.get('/map', wrapAsync(lisitngController.renderMapView));
+
 // create route (must come before /:id routes)
 router.post('/add', isLoggedIn, upload.single('image'), validateListing, wrapAsync(lisitngController.addListing));
+
+// book listing route
+router.post('/:id/book', isLoggedIn, wrapAsync(bookingsController.bookListing));
+
+// contact host route
+router.post('/:id/contact', isLoggedIn, wrapAsync(messagesController.startConversation));
 
 // edit route
 router.get('/:id/edit', isLoggedIn, isOwner, wrapAsync(lisitngController.renderEditForm));

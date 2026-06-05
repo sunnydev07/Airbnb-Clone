@@ -7,7 +7,9 @@ const userSchema = new Schema({
         type:String,
         required:true,
         unique:true
-    }
+    },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date
 });
 
 // Adds username + hashed password fields and auth helper methods
