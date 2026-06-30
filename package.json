@@ -10,6 +10,10 @@
   "author": "",
   "license": "ISC",
   "description": "Airbnb-style listing app built with Express, MongoDB, and EJS.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sunnydev07/Airbnb-Clone.git"
+  },
   "dependencies": {
     "axios": "^1.13.6",
     "cloudinary": "^2.9.0",
