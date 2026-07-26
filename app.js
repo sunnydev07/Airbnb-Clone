@@ -150,7 +150,14 @@ app.use('/', userRoutes);
 app.use('/listings', listingsRouter);
 app.use('/listings/:id/reviews', reviewRouter);
 app.use('/bookings', bookingsRouter);
-app.use('/messages', messagesRouter);
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    dbConnected: mongoose.connection.readyState === 1,
+    uptimeSeconds: Math.floor(process.uptime()),
+    timestamp: new Date().toISOString(),
+  });
+});
 
 // 404 handler
 app.use((req,res)=>{
